@@ -16,7 +16,7 @@ function A_output = ISPP_MA_Qiu(A_input,D_target)
     minValue = min(validRatios);
     D_o = D_o*minValue;
     difference_matrix = (D_target - D_o)./D_base;
-    maxstep = max(difference_matrix(idx));
+    maxstep = min(difference_matrix(idx));
 
     step_region = 0:0.01:maxstep;
     targetdistancediff_vec = zeros(length(step_region),1);
