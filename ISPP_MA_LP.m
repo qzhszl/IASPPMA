@@ -32,7 +32,7 @@ plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 
 distances(G_T)
 sum(sum(abs(distances(G_T)-D)))/sum(sum(D))
-
+sum(sum(abs(distances(G_T)-D)))
 
 
 
