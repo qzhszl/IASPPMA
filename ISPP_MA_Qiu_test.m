@@ -30,7 +30,6 @@ A(A~=0) =1;
 G_base = graph(A);
 D_base = distances(G_base)
 
-
 A_base1 = 0.01*A;
 G_base = graph(A_base1);
 G_base.Edges.Weight(1) = 1;
@@ -39,7 +38,7 @@ D_base1 = distances(G_base)
 
 A_base2 = 0.01*A;
 G_base = graph(A_base2);
-G_base.Edges.Weight(2) = 1;
+G_base.Edges.Weight(3) = 1;
 D_base2 = distances(G_base)
 
 
@@ -67,19 +66,33 @@ maxstep2 = max(difference_matrix2(idx));
 compute_region2 = 0:1:maxstep2;
 
 targetdistance_vec = zeros(length(compute_region)*length(compute_region1)*length(compute_region2),1);
+targetdistance_vec2 = zeros(length(compute_region)*length(compute_region1)*length(compute_region2),1);
 count = 1;
 minratio = inf;
+minratio2 = inf;
 for epsilon = compute_region
     for epsilon2 = compute_region2
         for epsilon1 = compute_region1
-            Dnew = D_o+epsilon*D_base+epsilon2*D_base2;
+            Dnew = D_o+epsilon*D_base+epsilon2*D_base2+epsilon1*D_base1;
             targetdistance  = sum(sum(abs(Dnew - D_target)))/sum(sum(abs(D_target)));
             targetdistance_vec(count) = targetdistance;
+            
+            nonzero_idx = D_target~=0;
+            deviation_matrix = abs(Dnew-D_target);
+            distances_deviation2_ratio = mean(deviation_matrix(nonzero_idx)./D_target(nonzero_idx));
+            targetdistance_vec2(count) = distances_deviation2_ratio;
             if targetdistance < minratio
                 bestepsilon = epsilon;
                 bestepsilon1 = epsilon1;
                 bestepsilon2 = epsilon2;
                 minratio = targetdistance;
+            end
+
+            if distances_deviation2_ratio < minratio2
+                bestepsilon_2 = epsilon;
+                bestepsilon1_2 = epsilon1;
+                bestepsilon2_2 = epsilon2;
+                minratio2 = distances_deviation2_ratio;
             end
             count=count+1;
             if rem(count, 100000)==0
@@ -90,7 +103,9 @@ for epsilon = compute_region
 end
 
 minratio
-plot(targetdistance_vec)
+minratio2
+
+plot(targetdistance_vec2)
 
 
 % function A_output = ISPP_MA_Qiu(A_input,D)

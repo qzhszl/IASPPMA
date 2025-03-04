@@ -1,7 +1,7 @@
 % This .m will test the performance of our approximated method for 
 % the IASPP with the minimum link weight adjustment
 clear,clc
-N=10;
+N=1000;
 T = generate_a_tree(N,1,10);
 subplot(2,2,1)
 plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
@@ -31,7 +31,10 @@ Goutput = graph(A_output);
 plot(Goutput,'EdgeLabel',Goutput.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
 distances_deviation2 = 0.5*u*abs(distances(Goutput)-D_dis)*u.'
-distances_deviation2_ratio = (u*abs(distances(Goutput)-D_dis)*u.')/(u*D_dis*u.')
+nonzero_idx = D_dis~=0;
+deviation_matrix = abs(distances(Goutput)-D_dis);
+distances_deviation2_ratio = mean(deviation_matrix(nonzero_idx)./D_dis(nonzero_idx))
+distances_deviation2_ratio = (u*(abs(distances(Goutput)-D_dis))*u.')/(u*(D_dis)*u.')
 
 function T = generate_a_tree(N,minlinkweight,maxlinkweight)
 
