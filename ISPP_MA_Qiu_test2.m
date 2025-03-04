@@ -8,7 +8,7 @@ A_INPUT = [0	0	0	1	0	0	0	0	0	1
 0	0	4	1	0	0	0	0	0	0
 0	0	0	0	1	0	0	0	0	0
 0	0	0	0	0	2	0	0	0	2
-1	0	0	0	0	0	0	0	2	0];
+1	0	0	0	0	0	0	0	2	0]; 
 
 
 D_target = [0	8	19	6	7	13	13	13	12	7
@@ -24,6 +24,9 @@ D_target = [0	8	19	6	7	13	13	13	12	7
 
 G = graph(A_INPUT);
 D_o = distances(G);
+
+D_target-D_o
+
 
 A = A_INPUT;
 A(A~=0) =1;
@@ -51,7 +54,7 @@ validRatios = ratioMatrix(idx);  % 仅保留非对角线元素
 minValue = min(validRatios);
 D_o = D_o*minValue;
 
-difference_matrix = (D_target - D_o)./D_base;
+difference_matrix = (D_target - D_o)./D_base
 maxstep = max(difference_matrix(idx));
 
 compute_region = 0:0.1:maxstep;

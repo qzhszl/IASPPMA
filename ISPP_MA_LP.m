@@ -1,70 +1,84 @@
-% Program name: ISPPMAE: Inverse all shortest path problem with the minimum
-% adjustment of the sum of the link weights
+clear,clc
 
-% Solve the problem using ILP
-% 定义树形网络T1的邻接矩阵A1和距离矩阵D
-A1 = [0, 1, 0, 0;
-      1, 0, 1, 1;
-      0, 1, 0, 0;
-      0, 1, 0, 0];  % 原始树形网络T1的邻接矩阵 (n x n)
-D = [0, 2, 5, 6;
-    2, 0, 3, 4;
-    5, 3, 0, 5;
-    6, 4, 5, 0];   % 目标距离矩阵D (n x n)
-
-% 节点数目
-n = size(A1, 1);
-
-% 定义所有节点的单位向量u
-u = ones(n, 1);
-
-% 初始猜测：令A2的初始值与A1相同
-A2_init = A1(:);  % 将A1重塑为列向量
-
-% 设置优化参数
-options = optimset('Display', 'iter', 'Algorithm', 'interior-point');
-
-% 定义A2的下界和上界（假设权重是非负的）
-lb = zeros(size(A2_init));  % 下界：权重必须为非负
-ub = inf * ones(size(A2_init));  % 上界：没有明确的上界
-
-% 设置epsilon（约束的容忍度）
-epsilon = 1e-5;
-
-% 使用fmincon进行优化求解
-[A2_opt, fval] = fmincon(@(A2) objective(A2, A1), A2_init, [], [], [], [], lb, ub, @(A2) constraint(A2, A1, D, epsilon), options);
-
-% 将优化后的A2重塑为矩阵形式
-A2_opt_matrix = reshape(A2_opt, size(A1));
-
-% 输出结果
-disp('优化后的邻接矩阵A2：');
-disp(A2_opt_matrix);
-disp('最终目标函数值（邻接矩阵调整的绝对差异）：');
-disp(fval);
+% INPUT tree
+T = [0 1 1 0 0;
+     1 0 0 0 0;
+     1 0 0 1 1;
+     0 0 1 0 0;
+     0 0 1 0 0];  % 无权树（邻接矩阵）
+subplot(2,2,1)
+G_T = graph(T);
+plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
+'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+D_T = distances(G_T);
+% [shortestDist, path,edgepath] = shortestpath(G_T, 2, 5)
+% edges = G_T.Edges.EndNodes(2,2)
 
 
-% 计算最短路径矩阵的函数 (使用Dijkstra算法)
-function S = shortestPath(A, W)
-    % 初始化最短路径矩阵
-    S = inf(n, n);
+% INPUT demand
+D = [0 1 2 2 3;
+     1 0 1 1 2;
+     2 1 0 2 1;
+     2 1 2 0 1;
+     3 2 1 1 0];  % 目标最短  路径矩阵
+
+w_opt = optimize_tree_weights_L1(T, D);
+disp('最优边权:');
+disp(w_opt);
+G_T.Edges.Weight = w_opt
+subplot(2,2,2)
+plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
+'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+
+distances(G_T)
+sum(sum(abs(distances(G_T)-D)))/sum(sum(D))
+
+
+
+
+
+function w = optimize_tree_weights_L1(T, D)
+    % 计算最优边权 w，使树 T 的最短路径矩阵 S(T, w) 逼近目标 D
+    % 使用线性规划求解最小绝对误差（p=1）
+    G_T = graph(T);
+    n = numnodes(G_T);  % 节点数
+%     edges = find(triu(T));  % 获取树的边索引
+    m = numedges(G_T);  % 边数
+    G_T.Edges
+    % 生成路径矩阵 P
+    P = zeros(n*(n-1)/2, m);
+    target_D = zeros(n*(n-1)/2, 1);
+    idx = 1;
+    
     for i = 1:n
-        % 使用Dijkstra算法计算从节点i到所有其他节点的最短路径
-        [dist, ~] = graphshortestpath(sparse(A), i, 'Weights', W(i, :));
-        S(i, :) = dist;
+        for j = i+1:n
+%             path_edges = find_path_edges(T, i, j, edges); % 获取路径上的边索引
+            [~, ~,path_edges] = shortestpath(G_T, i, j);
+            P(idx, path_edges) = 1; % 标记路径
+            target_D(idx) = D(i,j);
+            idx = idx + 1;
+        end
     end
-end
 
-% 目标函数 (最小化邻接矩阵调整的绝对差异)
-function f = objective(A2, A1)
-    A2_matrix = reshape(A2, size(A1));  % 将A2重塑为邻接矩阵
-    f = sum(abs(A2_matrix - A1), 'all');  % 计算元素之和的绝对差异
-end
-
-% 约束函数 (确保最短路径矩阵与目标矩阵D的差异小于epsilon)
-function [c, ceq] = constraint(A2, A1, D, epsilon)
-    A2_matrix = reshape(A2, size(A1));  % 将A2重塑为邻接矩阵
-    S = shortestPath(A1, A2_matrix);  % 计算T2网络的最短路径矩阵S
-    c = sum(abs(S - D), 'all') - epsilon;  % 确保S和D的差异小于epsilon
-    ceq = [];  % 无等式约束
+    % 线性规划变量：
+    % w: 边权重
+    % t: 误差变量 |S_ij - D_ij|
+    num_constraints = size(P, 1);  % 约束数量
+    
+    % 线性规划问题
+    f = [zeros(m,1); ones(num_constraints,1)];  % 目标函数 (最小化 t)
+    
+    % 约束矩阵 (S_ij - D_ij <= t)
+    A = [P -eye(num_constraints); -P -eye(num_constraints)];
+    b = [target_D; -target_D];
+    
+    % 变量约束 w > 0, t >= 0
+    epsilon = 0.01
+    lb = [epsilon*ones(m,1);zeros(num_constraints, 1)];
+    
+    % 线性规划求解
+    x = linprog(f, A, b, [], [], lb, []);
+    
+    % 提取最优权重 w
+    w = x(1:m);
 end
