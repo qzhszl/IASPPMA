@@ -1,6 +1,5 @@
 % This .m will test the performance of our approximated method for 
-% the IASPP given adjacency matrix, the shortest path matrix is the
-% shortest path distance matrix but
+% the IASPP with the minimum link weight adjustment
 clear,clc
 N=100;
 T = generate_a_tree(N,1,10);
@@ -26,9 +25,8 @@ plot(G2,'EdgeLabel',G2.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 u = ones(1,N);
 distances_deviation1 = 0.5*u*abs(distances(G2)-D_dis)*u.'
 subplot(2,2,3)
-% A_output = ISPP_MA_Qiu(A_T,D_dis);
-A_output = ISPP_givenA_Qiu(A_T,D_dis,numedges(G2));
-% subplot(2,2,4)
+A_output = ISPP_MA_Qiu(A_T,D_dis);
+subplot(2,2,4)
 Goutput = graph(A_output);
 plot(Goutput,'EdgeLabel',Goutput.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
