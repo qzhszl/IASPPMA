@@ -1,7 +1,7 @@
 % This .m will test the performance of our approximated method for 
 % the IASPP with the minimum link weight adjustment
 clear,clc
-N=1000;
+N=100;
 T = generate_a_tree(N,1,10);
 subplot(2,2,1)
 plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
