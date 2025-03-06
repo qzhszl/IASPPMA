@@ -1,4 +1,4 @@
-function A_output = ISPP_givenA_Qiu(A_input,D_target,base_num)
+function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     T = A_input;
     T(T~=0) =1;
     G_T = graph(T);
@@ -39,8 +39,8 @@ function A_output = ISPP_givenA_Qiu(A_input,D_target,base_num)
     e_opt = solve_weighted_matrix_linprog(D_target, D_list);
     Dnew = sum(cat(3, D_list{:}) .* reshape(e_opt, 1, 1, []), 3);
     A_output = DOR(Dnew,'advanced');
-    difference = sum(sum(abs(Dnew - D_target)));
-    disp(['总误差: ', num2str(difference)]);
+    % difference = sum(sum(abs(Dnew - D_target)));
+    % disp(['总误差: ', num2str(difference)]);
 end
 
 function e_opt = solve_weighted_matrix_linprog(D, D_list)
