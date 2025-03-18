@@ -21,9 +21,7 @@ D = [0 1 2 2 3;
      2 1 2 0 1;
      3 2 1 1 0];
 
-A_output = ISPP_givenA_Qiu(T,D,2)
-
-
+[A_output,Dnew] = ISPP_givenA_Qiu(T,D,2)
 
 
 % 计算每条边对应的 D_list
@@ -37,6 +35,7 @@ for i = 1:numedges(G_T)
     D_base = distances(G_base);
     D_list{i} = D_base;
 end
+
 
 % 调用 linprog 求解
 e_opt = solve_weighted_matrix_linprog(D, D_list);
