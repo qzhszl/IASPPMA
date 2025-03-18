@@ -1,37 +1,40 @@
 clear,clc
 % 用线性方法求解，以不同矩阵为基底
 tic
-T = [0 1 1 0 0; 
-     1 0 0 0 0;
-     1 0 0 1 1;
-     0 0 1 0 0;
-     0 0 1 0 0];  % 无权树（邻接矩阵）
-% N = 100
-% T = generate_a_tree(N,1,10);
-% T = full(T.adjacency("weighted"));
+% T = [0 1 1 0 0; 
+%      1 0 0 0 0;
+%      1 0 0 1 1;
+%      0 0 1 0 0;
+%      0 0 1 0 0];  % 无权树（邻接矩阵）
+N = 100
+T = generate_a_tree(N,1,10);
+T = full(T.adjacency());
 
 % subplot(2,2,1)
 G_T = graph(T);
 % plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 %     'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
 
-% D_T = distances(G_T);
+D_T = distances(G_T);
 
 % 目标最短路径矩阵（目标 D）
-D = [0 1 2 2 3;
-     1 0 1 1 2;
-     2 1 0 2 1;
-     2 1 2 0 1;
-     3 2 1 1 0];
+% D = [0 1 2 2 3;
+%      1 0 1 1 2;
+%      2 1 0 2 1;
+%      2 1 2 0 1;
+%      3 2 1 1 0];
 
-% D = generate_demand_distance_matrix(N,10)
+D = generate_demand_distance_matrix(N,10)
 
 basenumber = 2
 % 计算每条边对应的 D_list
-T_O = 0.0001*T;
+T_O = 0.001*T;
 G_o = graph(T_O);
 D_list = cell([numedges(G_T), 1]);
 diff_list = zeros(numedges(G_T), 1);
+tree = T;
+tree(tree~=0) =1;
+D_list{1} = distances(graph(tree));
 
 for i = 1:numedges(G_T)
     G_base = G_o;
@@ -41,17 +44,6 @@ for i = 1:numedges(G_T)
     diffVals = sum(sum(abs(D_base - D)));
     diff_list(i) = diffVals;
 end
-
-
-% for i = 1:numedges(G_T)
-%     G_base = G_o;
-%     G_base.Edges.Weight = randi(10,numedges(G_T),1);
-%     D_base = 0.001*distances(G_base);
-%     D_list{i} = D_base;
-%     diffVals = sum(sum(abs(D_base - D)));
-%     diff_list(i) = diffVals;
-% end
-
 
 [sortedVals, sortedIdx] = mink(diff_list, 2);
 D_list = D_list(sortedIdx);
@@ -119,6 +111,8 @@ function e_opt = solve_weighted_matrix_linprog(D, D_list)
     disp('最优权重:');
     disp(e_opt);
 end
+
+
 
 
 function D_demand = generate_demand_distance_matrix(N,max_linkweight)
