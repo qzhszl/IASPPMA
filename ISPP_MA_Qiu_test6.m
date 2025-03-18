@@ -6,13 +6,16 @@ T = [0 1 1 0 0;
      1 0 0 1 1;
      0 0 1 0 0;
      0 0 1 0 0];  % 无权树（邻接矩阵）
+% N = 100
+% T = generate_a_tree(N,1,10);
+% T = full(T.adjacency("weighted"));
 
-subplot(2,2,1)
+% subplot(2,2,1)
 G_T = graph(T);
-plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-    'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+% plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
+%     'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
 
-D_T = distances(G_T);
+% D_T = distances(G_T);
 
 % 目标最短路径矩阵（目标 D）
 D = [0 1 2 2 3;
@@ -21,9 +24,11 @@ D = [0 1 2 2 3;
      2 1 2 0 1;
      3 2 1 1 0];
 
+% D = generate_demand_distance_matrix(N,10)
+
 basenumber = 2
 % 计算每条边对应的 D_list
-T_O = 0.01*T;
+T_O = 0.0001*T;
 G_o = graph(T_O);
 D_list = cell([numedges(G_T), 1]);
 diff_list = zeros(numedges(G_T), 1);
@@ -36,7 +41,19 @@ for i = 1:numedges(G_T)
     diffVals = sum(sum(abs(D_base - D)));
     diff_list(i) = diffVals;
 end
-[sortedVals, sortedIdx] = maxk(diff_list, 4);
+
+
+% for i = 1:numedges(G_T)
+%     G_base = G_o;
+%     G_base.Edges.Weight = randi(10,numedges(G_T),1);
+%     D_base = 0.001*distances(G_base);
+%     D_list{i} = D_base;
+%     diffVals = sum(sum(abs(D_base - D)));
+%     diff_list(i) = diffVals;
+% end
+
+
+[sortedVals, sortedIdx] = mink(diff_list, 2);
 D_list = D_list(sortedIdx);
 
 
@@ -46,7 +63,7 @@ D_solution = sum(cat(3, D_list{:}) .* reshape(e_opt, 1, 1, []), 3);
 difference = sum(sum(abs(D_solution - D)));
 
 
-[A_output,Dnew] = ISPP_givenA_Qiu(T,D,4);
+[A_output,Dnew] = ISPP_givenA_Qiu(T,D,2);
 difference2 = sum(sum(abs(Dnew - D)))
 
 disp(['总误差: ', num2str(difference)]);
@@ -101,4 +118,23 @@ function e_opt = solve_weighted_matrix_linprog(D, D_list)
     e_opt = x_opt(1:m);
     disp('最优权重:');
     disp(e_opt);
+end
+
+
+function D_demand = generate_demand_distance_matrix(N,max_linkweight)
+    A = ones(N);
+    A_demand = randi(max_linkweight,N,N).*triu(A,1); % network that provides the targeted shortest path distances matrix
+    G_demand = graph(A_demand,'upper');
+    D_demand = distances(G_demand);
+end
+
+function T = generate_a_tree(N,minlinkweight,maxlinkweight)
+% 生成完全连接的随机加权图
+W = randi([minlinkweight,maxlinkweight], N, N);  % 生成 1-10 之间的随机整数
+W = triu(W,1);            % 仅保留上三角部分以避免重复
+W = W + W';               % 生成对称矩阵，表示无向图
+% 计算最小生成树
+G = graph(W);             % 生成图
+T = minspantree(G);       % 计算最小生成树
+T.Edges.Weight = randi([minlinkweight,maxlinkweight], numedges(T), 1);
 end
