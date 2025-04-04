@@ -7,18 +7,18 @@ simutimes = 1000;
 
 for N = Nvec
     N
-    result = zeros(simutimes,6);
+    result = zeros(simutimes,12);
     for i = 1:simutimes
-        [distances_deviation1,distances_deviation2_vec]=simu_on_tree_network(N);
-        result(i,:) = [distances_deviation1,distances_deviation2_vec];
+        [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
+        result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%d.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);
     writematrix(result,filename)
 end
 
 
 
-function [distances_deviation1,distances_deviation2_vec]=simu_on_tree_network(N)
+function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N)
     %for a tree network
     %_______________________________________________________________________
     % generate a tree network with uniformly random distributed link weight
@@ -29,16 +29,23 @@ function [distances_deviation1,distances_deviation2_vec]=simu_on_tree_network(N)
     % as the demand matrix
     D_demand = generate_demand_distance_matrix(N,10);
     
-    
+    tic
     [A_LP,D_target]=ISPP_givenA_LP(A_input,D_demand);
+    t_LP = toc;
     % G2 = graph(A_LP);
     u  = ones(1,N);
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
     linknum = numedges(T);
     base_num_vec =  round(linspace(2, linknum, 5));
+        distances_deviation2_vec = zeros(1,5);
+    t_dbs_vec = zeros(1,5);
+
     count = 1;
     for basement_num = base_num_vec
+        tic
         [A_Q,D_Q] = ISPP_givenA_Qiu(A_input,D_demand,basement_num);
+        t_dbs = toc;
+        t_dbs_vec(count) = t_dbs;
         % Goutput = graph(A_Q);
         distances_deviation2 = u*abs(D_Q-D_demand)*u.'/sum(sum(D_demand));
         distances_deviation2_vec(count) = distances_deviation2;
