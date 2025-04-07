@@ -4,7 +4,7 @@ clear,clc
 
 N_vec = [10,20,50,100];
 data_shecduled_instace = zeros(length(N_vec),6);
-
+colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 time_window = [0.001, 0.001937, 0.003753, 0.007272, 0.014092, 0.027308, 0.052912, 0.10247, 0.19837, 0.38404, 0.74346, 1.4384, 2.7826, 5.3849, 10.418, 20.173, 30];
 % time_window = [0.001, 2, 4, 6, 9, 11, 13, 15, 17, 19, 21, 24, 26, 28, 30]
 
@@ -22,10 +22,9 @@ for N = N_vec
     writematrix(data_shecduled_instace,filename)
 
     fig = figure; hold on;
-    colors = lines(6); % 获取 6 种不同的颜色
     
     for i = 1:6
-        plot(time_window, data_shecduled_instace(:,i), 'o-', 'Color', colors(i,:), 'LineWidth', 3, 'MarkerSize', 8);
+        plot(time_window, data_shecduled_instace(:,i), 'o-', 'Color', colors(i), 'LineWidth', 3, 'MarkerSize', 8);
     end
     
     % 图像美化

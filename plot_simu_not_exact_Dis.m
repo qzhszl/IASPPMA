@@ -15,11 +15,10 @@ for N = N_vec
 end
 
 fig = figure; hold on;
-colors = lines(6); % 获取 6 种不同的颜色
-
+colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 x = 1:4;
 for i = 1:6
-    errorbar(x, data_mean(:,i), data_std(:,i), 'o-', 'Color', colors(i,:), 'LineWidth', 3, 'MarkerSize', 8);
+    errorbar(x, data_mean(:,i), data_std(:,i), 'o-', 'Color', colors(i), 'LineWidth', 3, 'MarkerSize', 8);
 end
 
 % 图像美化
