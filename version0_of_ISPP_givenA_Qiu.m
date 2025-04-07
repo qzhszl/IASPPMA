@@ -2,11 +2,8 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     T = A_input;
     T(T~=0) =1;
     G_T = graph(T);
-    D_T = 0.001*distances(G_T);    
-    linknum = numedges(G_T);
-    G_base = graph(A_input);
-    D_base = 0.001*distances(G_base);
-
+    D_T = distances(G_T);    
+    linknum = numedges(G_T);    
     if base_num < 1
         error('Not enough number of basement');
     elseif base_num > linknum
@@ -14,6 +11,8 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     end
 
     if base_num ==2
+        G_base = graph(A_input);
+        D_base = distances(G_base);
         D_list = {D_T;D_base};
     elseif base_num == linknum
         T_O = 0.001*T;
@@ -30,8 +29,7 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
         G_o = graph(T_O);
         D_list = cell([base_num, 1]);
         D_list{1} = D_T;
-        D_list{2} = D_base;
-        for i = 3:base_num
+        for i = 2:base_num
             G_base = G_o;
             G_base.Edges.Weight(i) = 1;
             D_base = distances(G_base);
