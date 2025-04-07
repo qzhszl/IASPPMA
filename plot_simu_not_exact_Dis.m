@@ -4,7 +4,7 @@ data_mean = zeros(length(N_vec),6);
 data_std = zeros(length(N_vec),6);
 count = 1;
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation.txt",N);
     results = readmatrix(filename);
     results = results(:,1:6);
     mean_values = mean(results);
@@ -26,7 +26,7 @@ end
 ax = gca;  % Get current axis
 ax.FontSize = 14;  % Set font size for tick label
 xlim([0.7 4.5])
-ylim([0.2 0.7])
+% ylim([0.2 0.7])
 xticks([1 2 3 4])
 xticklabels({'10','20','50','100'})
 xlabel('$N$',Interpreter='latex',FontSize=20);
@@ -37,5 +37,5 @@ set(legend, 'Position', [0.64, 0.66, 0.2, 0.08]);
 box on
 hold off
 
-picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\NotExactsolutionLPvsQiu.pdf");
+picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\NotExactsolutionLPvsQiuPerturbation.pdf");
 exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 300);

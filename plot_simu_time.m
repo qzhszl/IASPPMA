@@ -7,7 +7,7 @@ data_mean = zeros(length(N_vec),6);
 data_std = zeros(length(N_vec),6);
 count = 1;
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\small1LPvsQiu_N%dhavetime.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation.txt",N);
     results = readmatrix(filename);
     results = results(:,7:12);
     mean_values = mean(results);
@@ -41,5 +41,5 @@ set(legend, 'Position', [0.24, 0.66, 0.2, 0.08]);
 box on
 hold off
 
-picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\small1NotExactsolutionLPvsQiuTime.pdf");
+picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\NotExactsolutionLPvsQiuPerturbationTime.pdf");
 exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 300);

@@ -36,7 +36,7 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
     linknum = numedges(T);
     base_num_vec =  round(linspace(2, linknum, 5));
-    distances_deviation2_vec = zeros(1,length(base_num_vec));
+    % distances_deviation2_vec = zeros(1,length(base_num_vec));
 
     distances_deviation2_vec = zeros(1,5);
     t_dbs_vec = zeros(1,5);
@@ -60,7 +60,6 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     % subplot(2,2,3)
     % plot(Goutput,'EdgeLabel',Goutput.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
     % 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
-    
 end
 
 
