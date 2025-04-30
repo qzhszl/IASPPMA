@@ -11,7 +11,7 @@ for N = Nvec
         [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
     writematrix(result,filename)
 end
 

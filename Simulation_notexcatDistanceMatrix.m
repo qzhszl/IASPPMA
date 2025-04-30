@@ -12,10 +12,9 @@ for N = Nvec
         [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetimetestrandom.txt",N);
     writematrix(result,filename)
 end
-
 
 
 function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N)
@@ -43,7 +42,8 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     count = 1;
     for basement_num = base_num_vec
         tic
-        [A_Q,D_Q] = ISPP_givenA_Qiu(A_input,D_demand,basement_num);
+        % [A_Q,D_Q] = ISPP_givenA_Qiu(A_input,D_demand,basement_num);
+        [A_Q,D_Q] = ISPP_givenA_Qiu_randombase(A_input,D_target,basement_num);
         t_dbs = toc;
         t_dbs_vec(count) = t_dbs;
         % Goutput = graph(A_Q);
