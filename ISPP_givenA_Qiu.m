@@ -2,6 +2,7 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     T = A_input;
     T(T~=0) =1;
     G_T = graph(T);
+    tic
     D_T = 0.001*distances(G_T);    
     linknum = numedges(G_T);
     G_base = graph(A_input);

@@ -2,6 +2,7 @@
 % the IASPP with given adjacency matrix.
 clear,clc
 Nvec = [10,20,50,100];
+Nvec = [50];
 simutimes = 1000;
 
 
@@ -31,6 +32,7 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     tic
     [A_LP,D_target]=ISPP_givenA_LP(A_input,D_demand);
     t_LP = toc;
+    disp(t_LP)
     % G2 = graph(A_LP);
     u  = ones(1,N);
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
@@ -42,8 +44,8 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     count = 1;
     for basement_num = base_num_vec
         tic
-        % [A_Q,D_Q] = ISPP_givenA_Qiu(A_input,D_demand,basement_num);
-        [A_Q,D_Q] = ISPP_givenA_Qiu_randombase(A_input,D_target,basement_num);
+        [A_Q,D_Q] = ISPP_givenA_Qiu(A_input,D_demand,basement_num);
+        % [A_Q,D_Q] = ISPP_givenA_Qiu_randombase(A_input,D_target,basement_num);
         t_dbs = toc;
         t_dbs_vec(count) = t_dbs;
         % Goutput = graph(A_Q);
