@@ -1,5 +1,4 @@
-function [A_output,D_output] = ISPP_givenA_LP(A_input,D_demand)
-    
+function [A_output,D_output] = ISPP_givenA_LP(A_input,D_demand)    
     T = A_input;  % 无权树（邻接矩阵）
     T(T~=0) =1;
     G_T = graph(T);
