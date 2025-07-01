@@ -23,7 +23,6 @@ function w = optimize_tree_weights_L1(T, D)
     
     for i = 1:n
         for j = i+1:n
-%             path_edges = find_path_edges(T, i, j, edges); % 获取路径上的边索引
             [~, ~,path_edges] = shortestpath(G_T, i, j);
             P(idx, path_edges) = 1; % 标记路径
             target_D(idx) = D(i,j);

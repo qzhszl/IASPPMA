@@ -1,61 +1,23 @@
 % This .m will test the performance of our approximated method for 
 % the IASPP with given adjacency matrix.
 clear,clc
-Nvec = [20];
+Nvec = [10,20,50,100];
 simutimes = 1000;
-colors = lines(7);
+
 
 for N = Nvec
     N
-    result = zeros(simutimes,13);
+    result = zeros(simutimes,12);
     for i = 1:simutimes
-        [d_nothingtodo,distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
-        result(i,:) = [d_nothingtodo,distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
+        [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
+        result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-
-    % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation.txt",N);
-    % writematrix(result,filename)
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetimetestpreSP.txt",N);
+    writematrix(result,filename)
 end
-x = 1;
-results = result(:,1:7);
-mean_values = mean(results);
-std_values = std(results);
-
-subplot(2,1,1)
-for i = 1:7
-    plot(mean_values)
-    hold on
-end
-% legend({'nothing to do','LP', 'bn = $2$', 'bn = $0.25L$', 'bn = $0.50L$', 'bn = $0.75L$', 'bn = $L$'}, 'interpreter','latex','Location', 'northeast',FontSize=18);
-xticks([1 2 3 4 5 6 7])
-
-subplot(2,1,2)
-r2 = result(:,8:13);
-mean_values2 = mean(r2);
-std_values2 = std(r2);
-for i = 1:6
-    plot(mean_values2)
-end
-% legend({'LP', 'bn = $2$', 'bn = $0.25L$', 'bn = $0.50L$', 'bn = $0.75L$', 'bn = $L$'}, 'interpreter','latex','Location', 'northeast',FontSize=18);
-xticks([1 2 3 4 5 6])
-
-% 图像美化
-% ax = gca;  % Get current axis
-% ax.FontSize = 14;  % Set font size for tick label
-% xlim([0.7 4.5])
-% % ylim([0.2 0.7])
-% xticks([1 2 3 4])
-% xticklabels({'10','20','50','100'})
-% xlabel('$N$',Interpreter='latex',FontSize=20);
-% % ylabel('$\frac{\sum_{i}\sum_{j}|d_{ij}-s_{ij}|}{\sum_{i}\sum_{j}d_{ij}}$','interpreter','latex',FontSize=20)
-% ylabel('$\frac{u \cdot |D-S|\cdot u^T}{u \cdot D \cdot u^T}$','interpreter','latex',FontSize=24)
-% legend({'LP', 'bn = $2$', 'bn = $0.25L$', 'bn = $0.50L$', 'bn = $0.75L$', 'bn = $L$'}, 'interpreter','latex','Location', 'northeast',FontSize=18);
-% set(legend, 'Position', [0.64, 0.66, 0.2, 0.08]);
-% box on
 
 
-
-function [d_nothingtodo,distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N)
+function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N)
     %for a tree network
     %_______________________________________________________________________
     % generate a tree network with uniformly random distributed link weight
@@ -64,29 +26,39 @@ function [d_nothingtodo,distances_deviation1,distances_deviation2_vec,t_LP,t_dbs
     
     % generate a distance matrix with uniformly random distributed link weight
     % as the demand matrix
-    D_demand = demand_base_on_original_tree(A_input,1);
+    D_demand = generate_demand_distance_matrix(N,10);
     
+    
+    n = N;
+    m = numedges(T);
+    P = zeros(n*(n-1)/2, m);
+    idx = 1;
+    for i = 1:n
+        for j = i+1:n
+            [~, ~,path_edges] = shortestpath(T, i, j);
+            P(idx, path_edges) = 1; % 标记路径
+            idx = idx + 1;
+        end
+    end
     
     tic
-    [A_LP,D_target]=ISPP_givenA_LP(A_input,D_demand);
+    [~,D_target]=ISPP_givenA_LP_pre_savesp(A_input,D_demand,P);
     t_LP = toc;
+    
     % G2 = graph(A_LP);
     u  = ones(1,N);
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
     linknum = numedges(T);
     base_num_vec =  round(linspace(2, linknum, 5));
-    % distances_deviation2_vec = zeros(1,length(base_num_vec));
-    
-    G_input = graph(A_input);
-    d_nothingtodo = u*abs(distances(G_input)-D_demand)*u.'/sum(sum(D_demand));
-
-    distances_deviation2_vec = zeros(1,5);
+        distances_deviation2_vec = zeros(1,5);
     t_dbs_vec = zeros(1,5);
+
     count = 1;
     for basement_num = base_num_vec
+        D_list = generate_distances_base(A_input,basement_num);
         tic
-        [A_Q,D_Q] = ISPP_givenA_Qiu_randombase(A_input,D_target,basement_num)
-        % [A_Q,D_Q] = ISPP_givenA_Qiu2(A_input,D_demand,basement_num);
+        [~,D_Q] = ISPP_givenA_Qiu_preSP(A_input,D_demand,basement_num,D_list);
+        % [A_Q,D_Q] = ISPP_givenA_Qiu_randombase(A_input,D_target,basement_num);
         t_dbs = toc;
         t_dbs_vec(count) = t_dbs;
         % Goutput = graph(A_Q);
@@ -103,18 +75,15 @@ function [d_nothingtodo,distances_deviation1,distances_deviation2_vec,t_LP,t_dbs
     % subplot(2,2,3)
     % plot(Goutput,'EdgeLabel',Goutput.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
     % 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+    
 end
 
 
-function D_demand = demand_base_on_original_tree(A_input,perturbation_scale)
-    N = size(A_input,1);
-    G = graph(A_input);
-    D_demand = distances(G);
-    perturbation = rand(N,N);
-    perturbation = triu(perturbation,1);
-    perturbation = perturbation+perturbation.';
-    perturbation = perturbation_scale.*perturbation;
-    D_demand = D_demand+perturbation;
+function D_demand = generate_demand_distance_matrix(N,max_linkweight)
+    A = ones(N);
+    A_demand = randi(max_linkweight,N,N).*triu(A,1); % network that provides the targeted shortest path distances matrix
+    G_demand = graph(A_demand,'upper');
+    D_demand = distances(G_demand);
 end
 
 function T = generate_a_tree(N,minlinkweight,maxlinkweight)
@@ -130,7 +99,64 @@ end
 
 
 
-function [A_output,Dnew] = ISPP_givenA_Qiu2(A_input,D_target,base_num)
+
+function [A_output,D_output] = ISPP_givenA_LP_pre_savesp(A_input,D_demand,P)
+    
+    T = A_input;  % 无权树（邻接矩阵）
+    T(T~=0) =1;
+    G_T = graph(T);
+    % INPUT demand
+    w_opt = optimize_tree_weights_L1_pre_savesp(T, D_demand,P);
+    G_T.Edges.Weight = w_opt;
+    A_output = full(G_T.adjacency("weighted"));
+    D_output = distances(G_T);
+end
+
+function w = optimize_tree_weights_L1_pre_savesp(T, D, P)
+    % 计算最优边权 w，使树 T 的最短路径矩阵 S(T, w) 逼近目标 D
+    % 使用线性规划求解最小绝对误差（p=1）
+    G_T = graph(T);
+    n = numnodes(G_T);  % 节点数
+%     edges = find(triu(T));  % 获取树的边索引
+    m = numedges(G_T);  % 边数
+    % 生成路径矩阵 P
+    % P = zeros(n*(n-1)/2, m);
+    target_D = zeros(n*(n-1)/2, 1);
+    idx = 1;
+    
+    for i = 1:n
+        for j = i+1:n
+            % [~, ~,path_edges] = shortestpath(G_T, i, j);
+            % P(idx, path_edges) = 1; % 标记路径
+            target_D(idx) = D(i,j);
+            idx = idx + 1;
+        end
+    end
+
+    % 线性规划变量：
+    % w: 边权重
+    % t: 误差变量 |S_ij - D_ij|
+    num_constraints = size(P, 1);  % 约束数量
+    
+    % 线性规划问题
+    f = [zeros(m,1); ones(num_constraints,1)];  % 目标函数 (最小化 t)
+    
+    % 约束矩阵 (S_ij - D_ij <= t)
+    A = [P -eye(num_constraints); -P -eye(num_constraints)];
+    b = [target_D; -target_D];
+    
+    % 变量约束 w > 0, t >= 0
+    epsilon = 0.001;
+    lb = [epsilon*ones(m,1);zeros(num_constraints, 1)];
+    
+    % 线性规划求解
+    x = linprog(f, A, b, [], [], lb, []);
+    
+    % 提取最优权重 w
+    w = x(1:m);
+end
+
+function D_list = generate_distances_base(A_input,base_num)
     T = A_input;
     T(T~=0) =1;
     G_T = graph(T);
@@ -170,14 +196,56 @@ function [A_output,Dnew] = ISPP_givenA_Qiu2(A_input,D_target,base_num)
             D_list{i} = D_base;
         end
     end
-    e_opt = solve_weighted_matrix_linprog(D_target, D_list);
+end
+
+
+function [A_output,Dnew] = ISPP_givenA_Qiu_preSP(A_input,D_target,base_num,D_list)
+    % T = A_input;
+    % T(T~=0) =1;
+    % G_T = graph(T);
+    % D_T = 0.001*distances(G_T);    
+    % linknum = numedges(G_T);
+    % G_base = graph(A_input);
+    % D_base = 0.001*distances(G_base);
+    % if base_num < 1
+    %     error('Not enough number of basement');
+    % elseif base_num > linknum
+    %     error('too many basement');
+    % end
+    % 
+    % if base_num ==2
+    %     D_list = {D_T;D_base};
+    % elseif base_num == linknum
+    %     T_O = 0.001*T;
+    %     G_o = graph(T_O);
+    %     D_list = cell([numedges(G_T), 1]);
+    %     for i = 1:linknum
+    %         G_base = G_o;
+    %         G_base.Edges.Weight(i) = 1;
+    %         D_base = distances(G_base);
+    %         D_list{i} = D_base;
+    %     end
+    % else
+    %     T_O = 0.001*T;
+    %     G_o = graph(T_O);
+    %     D_list = cell([base_num, 1]);
+    %     D_list{1} = D_T;
+    %     D_list{2} = D_base;
+    %     for i = 3:base_num
+    %         G_base = G_o;
+    %         G_base.Edges.Weight(i) = 1;
+    %         D_base = distances(G_base);
+    %         D_list{i} = D_base;
+    %     end
+    % end
+    e_opt = solve_weighted_matrix_linprog_preSP(D_target, D_list);
     Dnew = sum(cat(3, D_list{:}) .* reshape(e_opt, 1, 1, []), 3);
     A_output = DOR(Dnew,'advanced');
     % difference = sum(sum(abs(Dnew - D_target)));
     % disp(['总误差: ', num2str(difference)]);
 end
 
-function e_opt = solve_weighted_matrix_linprog(D, D_list)
+function e_opt = solve_weighted_matrix_linprog_preSP(D, D_list)
     m = size(D_list,1); % 变量个数
     [n, ~] = size(D); % D 的大小（n × n）
     
