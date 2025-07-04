@@ -1,35 +1,64 @@
 clear,clc
-% generate two trees , one from ER, one from BA
-A = GenerateERfast(100,0.5,10)
-G = graph(A);             % 生成图
-T = minspantree(G);       % 计算最小生成树
+% test 1
+% % generate two trees , one from ER, one from BA
+% A = GenerateERfast(10,0.5,10)
+% G = graph(A);             % 生成图
+% T = minspantree(G);       % 计算最小生成树
+% 
+% rou = diameter_hopcount(full(adjacency(T)))
+% % T = bfs_spanning_tree(G)
+% % lineAdj = generate_star_network(10,1);
+% % T = graph(lineAdj)
+% 
+% subplot(2,2,1)
+% plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
+% 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+% 
+% 
+% A = generate_weighted_BA(100,3,10)
+% G = graph(A)
+% T = minspantree(G);       % 计算最小生成树
+% % T = bfs_spanning_tree(G)
+% subplot(2,2,2)
+% plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
+% 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+% 
+% figure
+% degreesequence = degree(G);
+% h = histogram(degreesequence,'Normalization','pdf');
+% x1 = h.BinEdges;
+% x1 = x1(1:length(x1)-1);
+% y1 = h.Values;
+% plot(x1,y1)
+% set(gca, 'Xscale','log')
+% set(gca, 'Yscale','log')
 
-% T = bfs_spanning_tree(G)
-lineAdj = generate_star_network(10,1);
-T = graph(lineAdj)
-
-subplot(2,2,1)
-plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
 
 
-A = generate_weighted_BA(100,3,10)
-G = graph(A)
-T = minspantree(G);       % 计算最小生成树
-% T = bfs_spanning_tree(G)
-subplot(2,2,2)
-plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+% test 2: how the hopcount diameter change with the increment of p of ER
+simutimes = 1000;
 
-figure
-degreesequence = degree(G);
-h = histogram(degreesequence,'Normalization','pdf');
-x1 = h.BinEdges;
-x1 = x1(1:length(x1)-1);
-y1 = h.Values;
-plot(x1,y1)
-set(gca, 'Xscale','log')
-set(gca, 'Yscale','log')
+N = 20;
+for p = [0.25]
+    count = 1;
+    rou_vec = zeros(simutimes,1);
+    for i = 1: simutimes
+        A_input = GenerateERfast(N,p,10);
+                    % 生成图
+        connect_flag = network_isconnected(A_input);
+        while ~connect_flag
+            A_input = GenerateERfast(N,p,10);
+            % check connectivity
+            connect_flag = network_isconnected(A_input);
+        end
+        G = graph(A_input); 
+        T = minspantree(G);       % 计算最小生成树
+        rou = diameter_hopcount(full(adjacency(T)));
+        rou_vec(count) = rou;
+        count = count+1;
+    end
+    mean(rou_vec)
+end
 
 
 
@@ -91,3 +120,9 @@ function A = generate_weighted_BA(N,m,weighted)
 end
 
 
+function [isConnected] = network_isconnected(adj)
+    G = graph(adj);
+    components = conncomp(G);
+    % 判断图是否连通
+    isConnected = (max(components) == 1);
+end
