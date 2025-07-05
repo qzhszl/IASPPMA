@@ -23,7 +23,7 @@ for i = 1:simutimes
     [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N, dsmall,dmid,dlarge);
     result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter];
 end
-filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime_siyuinput_treefromERp05.txt",N);
+filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
 writematrix(result,filename)
 end
 
