@@ -43,7 +43,7 @@ function w = optimize_tree_weights_L1(T, D)
     b = [target_D; -target_D];
     
     % 变量约束 w > 0, t >= 0
-    epsilon = 0.001;
+    epsilon = 0.000001;
     lb = [epsilon*ones(m,1);zeros(num_constraints, 1)];
     
     % 线性规划求解
