@@ -6,7 +6,7 @@
 % thus we change the diameter of the underlying topology
 clear,clc
 % Nvec = [10,20,50,100];
-Nvec = [50];
+Nvec = [100];
 simutimes = 1000;
 
 

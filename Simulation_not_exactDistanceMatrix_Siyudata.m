@@ -11,7 +11,7 @@
 clear,clc
 Nvec = [10,20,50,100];
 for N = Nvec
-    run_simu_onsitydata(N,0.5,0.25,0.25)
+    run_simu_onsitydata(N,0.25,0.25,0.5)
 end
 
 
@@ -93,8 +93,8 @@ function D_demand = generate_siyu_demand_distance_matrix(N,dsmall,dmid,dlarge)
     % network control traffic with latency requirement between 2ms and 20ms, 
     % traffic that are less stringent on E2E latency, e.g., 50ms to 1s. 
     % 确保比例总和为100%
-    if dsmall + dmid + dlarge ~= 1
-        error('dsmall, dmid, dlarge 的总和必须为100');
+    if dsmall + dmid + dlarge - 1 >0.0000001
+        error('dsmall, dmid, dlarge 的总和必须为1');
     end
 
     % 计算矩阵中独立元素的数量（上三角不含对角线）

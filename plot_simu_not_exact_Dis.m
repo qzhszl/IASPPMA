@@ -1,5 +1,5 @@
 clear,clc
-N_vec = [10,20,50];
+N_vec = [10,20,50,100];
 data_mean = zeros(length(N_vec),6);
 data_std = zeros(length(N_vec),6);
 count = 1;
@@ -8,9 +8,11 @@ count = 1;
 % LPvsQiu_N%dhavetimetest
 % LPvsQiu_N%dPerturbation
 % LPvsQiu_N%dPerturbation1havetime
+% filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
 
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetimetestrandom.txt",N);
+    % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetimetestrandom.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,0.34,0.33,0.33);
     results = readmatrix(filename);
     results = results(:,1:6);
     mean_values = mean(results);
