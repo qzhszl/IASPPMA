@@ -2,7 +2,7 @@
 % the IASPP with given adjacency matrix.
 clear,clc
 Nvec = [10,20,50,100];
-Nvec = [200];
+Nvec = [100];
 simutimes = 1000;
 
 
@@ -13,7 +13,7 @@ for N = Nvec
         [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetimetestrandom.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandomtest.txt",N);
     writematrix(result,filename)
 end
 

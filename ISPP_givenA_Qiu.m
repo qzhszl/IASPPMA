@@ -3,10 +3,10 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     T(T~=0) =1;
     G_T = graph(T);
     tic
-    D_T = 0.001*distances(G_T);    
+    D_T = 0.0001*distances(G_T);    
     linknum = numedges(G_T);
     G_base = graph(A_input);
-    D_base = 0.001*distances(G_base);
+    D_base = 0.0001*distances(G_base);
 
     if base_num < 1
         error('Not enough number of basement');
@@ -17,7 +17,7 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
     if base_num ==2
         D_list = {D_T;D_base};
     elseif base_num == linknum
-        T_O = 0.001*T;
+        T_O = 0.0001*T;
         G_o = graph(T_O);
         D_list = cell([numedges(G_T), 1]);
         for i = 1:linknum
@@ -27,7 +27,7 @@ function [A_output,Dnew] = ISPP_givenA_Qiu(A_input,D_target,base_num)
             D_list{i} = D_base;
         end
     else
-        T_O = 0.001*T;
+        T_O = 0.0001*T;
         G_o = graph(T_O);
         D_list = cell([base_num, 1]);
         D_list{1} = D_T;
