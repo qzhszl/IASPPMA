@@ -9,7 +9,7 @@
 % The percentage of the three categories so that in one scenario, you have e.g., more than 50\% of the traffic with very stringent latency bound, etc. 
 
 clear,clc
-Nvec = [10,20,50,100];
+Nvec = [100];
 for N = Nvec
     run_simu_onsitydata(N,0.34,0.33,0.33)
 end
@@ -17,7 +17,7 @@ end
 
 function run_simu_onsitydata(N, dsmall,dmid,dlarge)
 % the sum of the percentage of three types of delay should be 1
-simutimes = 100;
+simutimes = 1000;
 result = zeros(simutimes,13);
 for i = 1:simutimes
     [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N, dsmall,dmid,dlarge);
@@ -114,7 +114,7 @@ function D_demand = generate_siyu_demand_distance_matrix(N,dsmall,dmid,dlarge)
     demands_a = options_a(randi(length(options_a), num_a, 1));
     
     % 类 b: 从 [5, 10, 20] ms 中随机选
-    options_b = [5, 10, 20];
+    options_b = [5, 10, 15, 20];
     demands_b = options_b(randi(length(options_b), num_b, 1));
     
     % 类 c: 从 [50, 100, 500, 1000] ms 中随机选

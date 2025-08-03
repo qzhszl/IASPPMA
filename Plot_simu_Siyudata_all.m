@@ -3,7 +3,7 @@ clear,clc
 % we compare the reuslts with different demand as input
 % demand are combined demand and the percentage is different
 
-N_vec = [10,20,50,100, 200];
+N_vec = [10,20,50,100,200];
 % N_vec = [200]
 % param_sets = [0.34, 0.33, 0.33;
 %               0.5, 0.25, 0.25;
@@ -36,22 +36,22 @@ for i = 1:size(param_sets, 1)
     time_mean = [time_mean,res_mean];
     time_std = [time_std,res_std];
     
-    [time_window, res] = extract_data_foronepercentage_sheduled_instances2(200, dsmall,dmid,dlarge);
+    [time_window, res] = extract_data_foronepercentage_sheduled_instances2(100, dsmall,dmid,dlarge);
     sheduled_instances_res = [sheduled_instances_res,res];
     % plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
     % plot_scheduled_instances(N_vec, dsmall,dmid,dlarge)
 end
 
-% plot_norm(N_vec,norm_mean,norm_std)
-% plot_time(N_vec,time_mean,time_std)
-plot_scheduled_instances2(200, time_window, sheduled_instances_res)
+plot_norm(N_vec,norm_mean,norm_std)
+plot_time(N_vec,time_mean,time_std)
+plot_scheduled_instances2(100, time_window, sheduled_instances_res)
 
 function [res_mean, res_std] = extract_data_foronepercentage_norm(N_vec, dsmall,dmid,dlarge)
     data_mean = zeros(length(N_vec),6);
     data_std = zeros(length(N_vec),6);
     count = 1;
     for N = N_vec
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         results = readmatrix(filename);
         results = results(:,1:6);
         mean_values = mean(results);
@@ -68,7 +68,7 @@ end
 function plot_norm(N_vec,norm_mean,norm_std)
     fig = figure; hold on;
     % colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
-    colors = [ "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382","#D08082",];
+    colors = [ "#C89FBF", "#7A7DB1", "#D9B382", "#6FB494"];
     x = 1:length(N_vec);
     count = 1;
     for i = 1:size(norm_mean,2)
@@ -98,7 +98,7 @@ function plot_norm(N_vec,norm_mean,norm_std)
     box on
     hold off
     
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\normallLPvsQiu_Siyudata.pdf");
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\normallLPvsQiu_Siyudata_discrete.pdf");
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 end
 
@@ -109,7 +109,7 @@ function [res_mean, res_std] = extract_data_foronepercentage_avetime(N_vec, dsma
     data_std = zeros(length(N_vec),6);
     count = 1;
     for N = N_vec
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         results = readmatrix(filename);
         results = results(:,7:12);
         mean_values = mean(results);
@@ -125,7 +125,7 @@ end
 
 function plot_time(N_vec, time_mean, time_std)
     fig = figure; hold on;
-    colors = [ "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382","#D08082",];
+    colors = [ "#C89FBF", "#7A7DB1", "#D9B382", "#6FB494",];
     x = 1:length(N_vec);
     count = 1;
     for i = 1:size(time_mean,2)
@@ -159,7 +159,7 @@ function plot_time(N_vec, time_mean, time_std)
     box on
     hold off
     
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\timeallLPvsQiu_Siyudata.pdf");
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\timeallLPvsQiu_Siyudata_discrete.pdf");
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 end
 
@@ -168,7 +168,7 @@ function [time_window, res] = extract_data_foronepercentage_sheduled_instances(N
     count = 1;
     data_shecduled_instace = zeros(length(time_window),6);
     for time_shreshold = time_window
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         result = readmatrix(filename);
         results = result(:,7:12);
         data_shecduled_instace(count,:) = sum(results<=time_shreshold,1)/1000; 
@@ -232,10 +232,10 @@ end
 
 
 function [time_window, res] = extract_data_foronepercentage_sheduled_instances2(N, dsmall,dmid,dlarge)      
-    time_window = linspace(100, 60000, 25);
+    time_window = linspace(100, 3000, 25);
     count = 1;
     data_shecduled_instace = zeros(length(time_window),6);
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
     result = readmatrix(filename);
     results = result(:,7:12);
     cumulative_time = cumsum(results, 1);
@@ -250,7 +250,7 @@ end
 
 function plot_scheduled_instances2(N, time_window, sheduled_instances_res)
     fig = figure; hold on;
-    colors = [ "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382","#D08082",];
+    colors = [ "#C89FBF", "#7A7DB1", "#D9B382", "#6FB494"];
     count = 1;
     for i = 1:size(sheduled_instances_res,2)
         if mod(i,2)==1
@@ -295,7 +295,7 @@ function plot_scheduled_instances2(N, time_window, sheduled_instances_res)
     box on
     hold off
     
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\sheduled_instance_all_LPvsQiu_Siyudata_Nnode%dper2.pdf",N);
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\sheduled_instance_all_LPvsQiu_Siyudata_Nnode%d_discrete.pdf",N);
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 
 end

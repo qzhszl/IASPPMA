@@ -20,12 +20,23 @@ file_name = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diamete
 ER_res2 = readmatrix(file_name);
 file_name = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\LPvsQiu_N%dhavetime_randominput_treefromERp008.txt",N);
 ER_res3 = readmatrix(file_name);
+% file_name = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\LPvsQiu_N%dhavetime_randominput_treefromERp006.txt",N);
+% ER_res4 = readmatrix(file_name);
+% ER_res = [ER_res1;ER_res2;ER_res3;ER_res4];
 ER_res = [ER_res1;ER_res2;ER_res3];
 a = ER_res(:,13);
-tabulate(a)
+T_TABULATE = tabulate(a)
+tabulate(ER_res1(:,13))
+tabulate(ER_res2(:,13))
+tabulate(ER_res3(:,13))
+% tabulate(ER_res4(:,13))
+total_count = sum(T_TABULATE(:,2));
 max(ER_res(:,7))
-
-diameter_hop_vec = [2,10,15,20,49];
+max(star_res)
+max(chain_res)
+max(ER_res)
+% diameter_hop_vec = [2,10,15,20,49];
+diameter_hop_vec = [2,15,49];
 count = 1;
 for diameter_hop  = diameter_hop_vec
     if diameter_hop==2
@@ -42,16 +53,44 @@ for diameter_hop  = diameter_hop_vec
     count = 1+count;
 end
 
-
-% plot_time(diameter_hop_vec,star_res,chain_res,ER_res)
-
-
-% plot_norm(data_mean,data_std)
+% plot_time(N,diameter_hop_vec,star_res,chain_res,ER_res)
+% 
+% plot_norm(N,data_mean,data_std)
 
 % plot_scheduled_time(data_mean,data_std)
 
-plot_scheduled_instances(diameter_hop_vec,star_res,chain_res,ER_res)
-function plot_time(diameter_hop_vec,star_res,chain_res,ER_res)
+% plot_scheduled_instances(diameter_hop_vec,star_res,chain_res,ER_res)
+
+
+% plot sheduled instance 2
+for diameter_hop = diameter_hop_vec
+    ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
+    samle_time_com = size(ER_res_withdia,1);
+end
+sample_time = 300
+
+sheduled_instances_res =[];
+for diameter_hop  = diameter_hop_vec
+    time_window = linspace(2, 100, 25);
+    if diameter_hop==2
+        star_res = star_res(1:sample_time,:);
+        [time_window, res] = extract_data_diffrho_sheduled_instances2(star_res,time_window);
+        sheduled_instances_res = [sheduled_instances_res,res];
+    elseif diameter_hop==49
+        chain_res = chain_res(1:sample_time,:);
+        [time_window, res] = extract_data_diffrho_sheduled_instances2(chain_res,time_window);
+        sheduled_instances_res = [sheduled_instances_res,res];
+    else
+        ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
+        ER_res_withdia = ER_res_withdia(1:sample_time,:);
+        [time_window, res] = extract_data_diffrho_sheduled_instances2(ER_res_withdia,time_window);
+        sheduled_instances_res = [sheduled_instances_res,res];
+    end
+end
+plot_scheduled_instances2(N, time_window, sheduled_instances_res)
+
+
+function plot_time(N,diameter_hop_vec,star_res,chain_res,ER_res)
     data_mean = zeros(length(diameter_hop_vec),6);
     data_std = zeros(length(diameter_hop_vec),6);
     count = 1    
@@ -99,12 +138,12 @@ function plot_time(diameter_hop_vec,star_res,chain_res,ER_res)
     % lgd.NumColumns = 1;
     box on
     hold off
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\timeratio_LPvsQiu_diffdiameter_randomrequirements.pdf");
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\timeratio_LPvsQiu_diffdiameter_randomrequirements_N%d.pdf",N);
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 end
 
 
-function plot_norm(data_mean,data_std)
+function plot_norm(N, data_mean,data_std)
     fig = figure; hold on;
     colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
     x = [2,10,15,20,49];
@@ -118,20 +157,20 @@ function plot_norm(data_mean,data_std)
     
     % 图像美化
     ax = gca;  % Get current axis
-    ax.FontSize = 20;  % Set font size for tick label
+    ax.FontSize = 24;  % Set font size for tick label
     % xlim([0.7 4.5])
     ylim([0 0.6])
     xticks([0 10 20 30 40 50])
     % xticklabels({'10','20','50','100'})
-    xlabel('$\rho$',Interpreter='latex',FontSize=24);
-    ylabel('$\frac{u \cdot |D-S|\cdot u^T}{u \cdot D \cdot u^T}$','interpreter','latex',FontSize=30)
+    xlabel('$\rho$',Interpreter='latex',FontSize=26);
+    ylabel('$|D-S|$','interpreter','latex',FontSize=26)
     lgd = legend({'LPLW', '$b_n = 2$', '$b_n = 0.25L$', '$b_n = 0.50L$', '$b_n = 0.75L$', '$b_n = L$'}, 'interpreter','latex','Location', 'southeast',FontSize=20);
     % lgd.NumColumns = 2;
     % set(legend);
     box on
     hold off
     
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\norm_LPvsQiu_diffdiameter_randomrequirements.pdf");
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\norm_LPvsQiu_diffdiameter_randomrequirements_N%d.pdf",N);
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 end
 
@@ -221,4 +260,54 @@ function plot_scheduled_instances(diameter_hop_vec,star_res,chain_res,ER_res)
 end
 
 
+function [time_window, res] = extract_data_diffrho_sheduled_instances2(resultdata,time_window)      
+    count = 1;
+    data_shecduled_instace = zeros(length(time_window),6);
+    result = resultdata;
+    results = result(:,7:12);
+    cumulative_time = cumsum(results, 1);
+    max(cumulative_time) 
+    for time_shreshold = time_window      
+        data_shecduled_instace(count,:) = sum(cumulative_time<=time_shreshold,1)/size(resultdata,1); 
+        count = count+1;
+    end
+    res = data_shecduled_instace(:,1:2);
+end
 
+
+
+function plot_scheduled_instances2(N, time_window, sheduled_instances_res)
+    fig = figure; hold on;
+    colors = [ "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382","#D08082",];
+    count = 1;
+    for i = 1:size(sheduled_instances_res,2)
+        if mod(i,2)==1
+            plot(time_window, sheduled_instances_res(:,i), 's-', 'Color', colors(count), 'LineWidth', 3.5, 'MarkerSize', 10);
+        else
+            plot(time_window, sheduled_instances_res(:,i), 'o--', 'Color', colors(count), 'LineWidth', 3.5, 'MarkerSize', 10);
+            count = count+1;
+        end
+    end
+
+    % 图像美化
+    ax = gca;  % Get current axis
+    ax.FontSize = 24;  % Set font size for tick label
+    % xlim([0.001 100])
+    % set(gca,"xscale",'log')
+    ylim([0 1.05])
+    % xticks([1 2 3 4])
+    % xticklabels({'10','20','50','100'})
+    xlabel('$t$',Interpreter='latex',FontSize=26);
+    % ylabel('$\frac{\sum_{i}\sum_{j}|d_{ij}-s_{ij}|}{\sum_{i}\sum_{j}d_{ij}}$','interpreter','latex',FontSize=20)
+    ylabel('$n_{s}/n_{a}$','interpreter','latex',FontSize=26)
+    % 2,10,15,20,49
+    % lgd = legend({'LPLW, $\rho = 2$', 'DBS, $\rho = 2$', 'LPLW, $\rho = 10$', 'DBS, $\rho = 10$','LPLW, $\rho = 15$', 'DBS, $\rho = 15$', 'LPLW, $\rho = 20$', 'DBS, $\rho = 20$','LPLW, $\rho = 49$', 'DBS, $\rho = 49$'}, 'Position', [0.6, 0.45, 0.2, 0.1],'interpreter','latex',FontSize=20);
+    lgd = legend({'LPLW, $\rho = 2$', 'DBS, $\rho = 2$','LPLW, $\rho = 15$', 'DBS, $\rho = 15$', 'LPLW, $\rho = 49$', 'DBS, $\rho = 49$'}, 'Position', [0.6, 0.42, 0.2, 0.1],'interpreter','latex',FontSize=20);
+
+    box on
+    hold off
+    
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\sheduled_instance_all_LPvsQiu_diffrho_n%d.pdf",N);
+    exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
+
+end

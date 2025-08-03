@@ -1,23 +1,23 @@
 clear,clc
 % Siyudata
 % Plot te data for what, for removing the shortest path
-N_vec = [10,20,50,100];
+N_vec = [10,20,50,100,200];
 
 % dsmall = 0.7;
 % dmid = 0.2;
 % dlarge = 0.1;
 % 
-% dsmall = 0.34;
-% dmid = 0.33;
-% dlarge = 0.33;
+dsmall = 0.34;
+dmid = 0.33;
+dlarge = 0.33;
 
-dsmall = 0.5;
-dmid = 0.25;
-dlarge = 0.25;
+% dsmall = 0.5;
+% dmid = 0.25;
+% dlarge = 0.25;
 
 plot_norm(N_vec, dsmall,dmid,dlarge)
 plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
-plot_scheduled_instances(N_vec, dsmall,dmid,dlarge)
+% plot_scheduled_instances(N_vec, dsmall,dmid,dlarge)
 
 
 
@@ -40,6 +40,7 @@ function plot_norm(N_vec, dsmall,dmid,dlarge)
     fig = figure; hold on;
     colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
     x = 1:length(N_vec);
+    data_mean
     for i = 1:6
         if i==1
             errorbar(x, data_mean(:,i), data_std(:,i), 's-', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 10,'CapSize',10);
@@ -86,8 +87,8 @@ function plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
     
     fig = figure; hold on;
     colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
-    
-    x = 1:4;
+    data_mean
+    x = 1:5;
     for i = 1:2
         if i==1
             errorbar(x, data_mean(:,i), data_std(:,i), 's-', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 12);

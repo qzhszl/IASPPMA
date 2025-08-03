@@ -17,7 +17,9 @@ for N = Nvec
         [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime_randominput_treefromERp09.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\LPvsQiu_N%dhavetime_randominput_treefromERp006.txt",N);
+    % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\diff_diameter\\LPvsQiu_N%dhavetime_randominput_pathnetwork.txt",N);
+
     writematrix(result,filename)
 end
 
@@ -38,7 +40,7 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diam
 
     % 3. normal ER network with diff p
     % ----------------------------------------------------------
-    T = generate_a_tree_fromER(N,0.9,10)
+    T = generate_a_tree_fromER(N,0.06,10);
     A_input = full(adjacency(T,"weighted"));
     
     tree_diameter = diameter_hopcount(A_input);

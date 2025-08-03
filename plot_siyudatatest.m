@@ -2,7 +2,7 @@ clear,clc
 % Siyudata
 % Plot te data for what, for removing the shortest path
 N_vec = [10,20,50,100];
-
+N_vec = [200]
 % dsmall = 0.7;
 % dmid = 0.2;
 % dlarge = 0.1;
@@ -18,7 +18,11 @@ dlarge = 0.33;
 plot_norm(N_vec, dsmall,dmid,dlarge)
 plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
 % plot_scheduled_instances(N_vec, dsmall,dmid,dlarge)
-
+%  0.4306    0.5437    0.5259    0.5043    0.4938    0.4307
+% 0.4006    0.4919    0.4784    0.4586    0.4401    0.4009
+% 0.3394    0.4397    0.4216    0.3997    0.3746    0.3403
+% 0.2745    0.3969    0.3724    0.3416    0.3030    0.2762
+% 0.2227    0.3659    0.3355    0.2955    0.2491    0.2287
 
 
 function plot_norm(N_vec, dsmall,dmid,dlarge)
@@ -28,10 +32,10 @@ function plot_norm(N_vec, dsmall,dmid,dlarge)
 
     for N = N_vec
         filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testfixdemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
-%         filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\TestNotdistance_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
-%         filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testsmalldemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\TestNotdistance_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testsmalldemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
 
-        
         results = readmatrix(filename);
         results = results(:,1:6);
         mean_values = mean(results);
@@ -51,7 +55,7 @@ function plot_norm(N_vec, dsmall,dmid,dlarge)
             errorbar(x, data_mean(:,i), data_std(:,i), 'o--', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 10,'CapSize',10);
         end
     end
-    
+    data_mean
     % 图像美化
     ax = gca;  % Get current axis
     ax.FontSize = 20;  % Set font size for tick label
@@ -78,7 +82,10 @@ function plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
     data_std = zeros(length(N_vec),6);
     count = 1;
     for N = N_vec
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testfixdemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\TestNotdistance_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testsmalldemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         results = readmatrix(filename);
         results = results(:,7:12);
         mean_values = mean(results);
@@ -90,7 +97,7 @@ function plot_scheduled_time(N_vec, dsmall,dmid,dlarge)
     
     fig = figure; hold on;
     colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
-    
+    data_mean
     x = 1:4;
     for i = 1:2
         if i==1
