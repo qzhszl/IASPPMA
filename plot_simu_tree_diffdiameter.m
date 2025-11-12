@@ -35,8 +35,8 @@ max(ER_res(:,7))
 max(star_res)
 max(chain_res)
 max(ER_res)
-% diameter_hop_vec = [2,10,15,20,49];
-diameter_hop_vec = [2,15,49];
+diameter_hop_vec = [2,10,15,20,49];
+% diameter_hop_vec = [2,15,49];
 count = 1;
 for diameter_hop  = diameter_hop_vec
     if diameter_hop==2
@@ -55,7 +55,7 @@ end
 
 % plot_time(N,diameter_hop_vec,star_res,chain_res,ER_res)
 % 
-% plot_norm(N,data_mean,data_std)
+plot_norm(N,data_mean,data_std)
 
 % plot_scheduled_time(data_mean,data_std)
 
@@ -63,31 +63,31 @@ end
 
 
 % plot sheduled instance 2
-for diameter_hop = diameter_hop_vec
-    ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
-    samle_time_com = size(ER_res_withdia,1);
-end
-sample_time = 300
-
-sheduled_instances_res =[];
-for diameter_hop  = diameter_hop_vec
-    time_window = linspace(2, 100, 25);
-    if diameter_hop==2
-        star_res = star_res(1:sample_time,:);
-        [time_window, res] = extract_data_diffrho_sheduled_instances2(star_res,time_window);
-        sheduled_instances_res = [sheduled_instances_res,res];
-    elseif diameter_hop==49
-        chain_res = chain_res(1:sample_time,:);
-        [time_window, res] = extract_data_diffrho_sheduled_instances2(chain_res,time_window);
-        sheduled_instances_res = [sheduled_instances_res,res];
-    else
-        ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
-        ER_res_withdia = ER_res_withdia(1:sample_time,:);
-        [time_window, res] = extract_data_diffrho_sheduled_instances2(ER_res_withdia,time_window);
-        sheduled_instances_res = [sheduled_instances_res,res];
-    end
-end
-plot_scheduled_instances2(N, time_window, sheduled_instances_res)
+% for diameter_hop = diameter_hop_vec
+%     ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
+%     samle_time_com = size(ER_res_withdia,1);
+% end
+% sample_time = 300
+% 
+% sheduled_instances_res =[];
+% for diameter_hop  = diameter_hop_vec
+%     time_window = linspace(2, 100, 25);
+%     if diameter_hop==2
+%         star_res = star_res(1:sample_time,:);
+%         [time_window, res] = extract_data_diffrho_sheduled_instances2(star_res,time_window);
+%         sheduled_instances_res = [sheduled_instances_res,res];
+%     elseif diameter_hop==49
+%         chain_res = chain_res(1:sample_time,:);
+%         [time_window, res] = extract_data_diffrho_sheduled_instances2(chain_res,time_window);
+%         sheduled_instances_res = [sheduled_instances_res,res];
+%     else
+%         ER_res_withdia = ER_res(ER_res(:,13) == diameter_hop, :);
+%         ER_res_withdia = ER_res_withdia(1:sample_time,:);
+%         [time_window, res] = extract_data_diffrho_sheduled_instances2(ER_res_withdia,time_window);
+%         sheduled_instances_res = [sheduled_instances_res,res];
+%     end
+% end
+% plot_scheduled_instances2(N, time_window, sheduled_instances_res)
 
 
 function plot_time(N,diameter_hop_vec,star_res,chain_res,ER_res)
@@ -163,7 +163,7 @@ function plot_norm(N, data_mean,data_std)
     xticks([0 10 20 30 40 50])
     % xticklabels({'10','20','50','100'})
     xlabel('$\rho$',Interpreter='latex',FontSize=26);
-    ylabel('$|D-S|$','interpreter','latex',FontSize=26)
+    ylabel('$\|D-S\|$','interpreter','latex',FontSize=26)
     lgd = legend({'LPLW', '$b_n = 2$', '$b_n = 0.25L$', '$b_n = 0.50L$', '$b_n = 0.75L$', '$b_n = L$'}, 'interpreter','latex','Location', 'southeast',FontSize=20);
     % lgd.NumColumns = 2;
     % set(legend);

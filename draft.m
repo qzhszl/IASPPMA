@@ -6,12 +6,19 @@ param_sets = [0.5, 0.25, 0.25;
               0.25,0.5,0.25;
               0.25,0.25,0.5;
               0.34, 0.33, 0.33;
+              0.80,0.10,0.10;
+              0.10,0.80,0.10;
+              0.10,0.10,0.80;
               ];
 
 % param_sets = [
 %               0.5,0.25,0.25;
 %               0.34, 0.33, 0.33;
 %               ];
+% param_sets = [
+%               0.34, 0.33, 0.33;
+%               ];
+
 N_vec = [200]
 % 0.194756700355456	0.119769859336237	0.119769859336237	0.156598135553406
 %                   0.1448                                  0.1432
@@ -44,9 +51,15 @@ function [res_mean, res_std] = extract_data_foronepercentage_norm(N_vec, dsmall,
     for N = N_vec
         % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\LPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test\\Testfixdemand_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
         results = readmatrix(filename);
         results = results(:,1:6);
+        result_diff = results(:, 2) - results(:, 1)
+        mean_res = mean(result_diff)
+        max_res = max(result_diff)
+        largenum = length(result_diff(find(result_diff>0.19)))
         mean_values = mean(results);
         std_values = std(results);
         data_mean(count,:) = mean_values;
@@ -60,8 +73,8 @@ end
 
 function plot_norm(N_vec,norm_mean,norm_std)
     fig = figure; hold on;
-    % colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
-    colors = [ "#C89FBF", "#7A7DB1", "#D9B382", "#6FB494"];
+    colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382", "#4E79A7"];
+    % colors = [ "#C89FBF", "#7A7DB1", "#D9B382", "#6FB494"];
     x = 1:length(N_vec);
     count = 1;
     for i = 1:size(norm_mean,2)
@@ -84,7 +97,7 @@ function plot_norm(N_vec,norm_mean,norm_std)
     ylabel('$|D-S|$','interpreter','latex',FontSize=26)
     % lgd = legend({'LPLW', '$b_n = 2$', '$b_n = 0.25L$', '$b_n = 0.50L$', '$b_n = 0.75L$', '$b_n = L$'}, 'interpreter','latex','Location', 'northeast',FontSize=23.5);
     % lgd = legend({'LPLW, DE', '$b_n = 2$, DE', 'LPLW, DSD', '$b_n = 2$, DSD', '$b_n = 0.75L$', '$b_n = L$'}, 'interpreter','latex','Location', 'northeast',FontSize=23.5);
-    % lgd = legend({'LPLW, 1', '$b_n = 2$, 1', 'LPLW, 2', '$b_n = 2$, 2', 'LPLW, 3', '$b_n = 2$, 3', 'LPLW, 4', '$b_n = 2$, 4','LPLW, 5', '$b_n = 2$, 5'}, 'interpreter','latex','Location', 'northeast',FontSize=23.5);
+    lgd = legend({'LPLW, 1', '$b_n = 2$, 1', 'LPLW, 2', '$b_n = 2$, 2', 'LPLW, 3', '$b_n = 2$, 3', 'LPLW, 4', '$b_n = 2$, 4','LPLW, 5', '$b_n = 2$, 5','LPLW, 6', '$b_n = 2$, 6','LPLW, 7', '$b_n = 2$, 7'}, 'interpreter','latex','Location', 'northwest',FontSize=23.5);
 
     % lgd.NumColumns = 2;
     % set(legend, 'Position', [0.446, 0.73, 0.2, 0.1]);

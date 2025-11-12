@@ -19,7 +19,7 @@ for N = N_vec
     count = count+1;
 end
 
-
+B = data_mean(:, 2:2:end) - data_mean(:, 1:2:end)
 
 
 
@@ -42,7 +42,7 @@ xlim([0 210])
 % xticks([1 2 3 4 5])
 % xticklabels({'10','20','50','100','200'})
 xlabel('$N$',Interpreter='latex',FontSize=24);
-ylabel('$|D-S|$','interpreter','latex',FontSize=24)
+ylabel('$\|D-S\|$','interpreter','latex',FontSize=24)
 % lgd = legend({'LPLW', '$b_n = 2$', '$b_n = 0.25L$', '$b_n = 0.50L$', '$b_n = 0.75L$', '$b_n = L$'}, 'interpreter','latex','Location', 'northeast',FontSize=23.5);
 % lgd.NumColumns = 2;
 % set(legend, 'Position', [0.446, 0.73, 0.2, 0.1]);

@@ -2,7 +2,7 @@
 % the IASPP with given adjacency matrix.
 clear,clc
 Nvec = [10,20,50,100];
-Nvec = [100];
+Nvec = [30,40,60,70,80,90];
 simutimes = 1000;
 
 

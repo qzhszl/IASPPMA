@@ -5,7 +5,7 @@ clear,clc
 % folderPath = 'D:\data\ISPP_givenA\complete_random_demand\ExactdistanceDemand';
 % folderPath = "C:\Users\zqiu1\OneDrive - Delft University of Technology\Desktop\temdata2";
 folderPath = 'D:\data\ISPP_givenA\complete_random_demand\SiyuData\discrete';
-folderPath = "D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test"
+% folderPath = "D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test"
 % 获取所有包含 "_simu" 的 .txt 文件
 fileList = dir(fullfile(folderPath, '*_simu*.txt'));
 
