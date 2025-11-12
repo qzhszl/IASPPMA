@@ -2,7 +2,7 @@
 % the IASPP with given adjacency matrix.
 
 % the demand matrix is random generated demand matrix
-%  The service instances considered during the evaluations are classified into three categories: 
+% Specifically, the service instances considered during the evaluations are classified into three categories: 
 % delay sensitive traffic with very small latency bound from 100µs to 2ms, 
 % network control traffic with latency requirement between 2ms and 20ms, 
 % traffic that are less stringent on E2E latency, e.g., 50ms to 1s. 

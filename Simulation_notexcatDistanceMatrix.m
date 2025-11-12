@@ -1,5 +1,6 @@
 % This .m will test the performance of our approximated method for 
 % the IASPP with given adjacency matrix.
+% The demand is purely random demand
 clear,clc
 Nvec = [10,20,50,100];
 Nvec = [30,40,60,70,80,90];
