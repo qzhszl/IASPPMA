@@ -12,9 +12,9 @@
 % The percentage of the three categories so that in one scenario, you have e.g., more than 50\% of the traffic with very stringent latency bound, etc. 
 
 clear,clc
-Nvec = [100];
+Nvec = [20,40,60,80];
 for N = Nvec
-    run_simu_onsitydata_descrete(N,0.34,0.33,0.33)
+    run_simu_onsitydata_descrete(N,0.25,0.25,0.50)
 end
 
 

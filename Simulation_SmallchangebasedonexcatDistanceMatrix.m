@@ -1,7 +1,8 @@
 % This .m will test the performance of our approximated method for 
 % the IASPP with given adjacency matrix.
 clear,clc
-Nvec = [10,20,50,100];
+% Nvec = [10,20,50,100];
+Nvec = [40,70,90];
 simutimes = 1000;
 
 for N = Nvec
