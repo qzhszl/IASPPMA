@@ -38,7 +38,7 @@ for i = 1:n
 end
 
 iteration_times = 1;
-while iteration_times<100
+while iteration_times<1000
     [sum_infeasibility,infeasibility,w,G_T] = solve_infeasibility_minimization(P,target_D,m,G_T,D);
 
     innneridx = 1;
@@ -77,13 +77,12 @@ while iteration_times<100
   
     % 求解 LP
     options = optimoptions('linprog','Display','iter'); % 或 'none'
-    [w_opt, ~, ~, ~] = linprog(f, A, B, Aeq, Beq, lb, ub, options)
-    
+    [w_opt, ~, ~, ~] = linprog(f, A, B, Aeq, Beq, lb, ub, options);
     
     G_T.Edges.Weight = w;
     % A_output = full(G_T.adjacency("weighted"));
     D_output = distances(G_T);
-    sum_infeasibility =  sum(sum(abs(D_output-D)))
+    sum_infeasibility =  sum(sum(abs(D_output-D)));
 
     iteration_times = iteration_times+1;
 end
