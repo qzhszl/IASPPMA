@@ -1,13 +1,14 @@
 clear,clc
 % folderPath = 'D:\data\ISPP_givenA\complete_random_demand\SiyuData';
 % folderPath = 'D:\data\ISPP_givenA\complete_random_demand\PerturbatedDemand';
-% folderPath = 'D:\data\ISPP_givenA\complete_random_demand\RandomDemand';
+folderPath = 'D:\data\ISPP_givenA\complete_random_demand\RandomDemand';
 % folderPath = 'D:\data\ISPP_givenA\complete_random_demand\ExactdistanceDemand';
 % folderPath = "C:\Users\zqiu1\OneDrive - Delft University of Technology\Desktop\temdata2";
-folderPath = 'D:\data\ISPP_givenA\complete_random_demand\SiyuData\discrete';
+% folderPath = 'D:\data\ISPP_givenA\complete_random_demand\SiyuData\discrete';
 % folderPath = "D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\test"
 % 获取所有包含 "_simu" 的 .txt 文件
 fileList = dir(fullfile(folderPath, '*_simu*.txt'));
+
 
 % 提取文件名前缀（在 "_simu" 之前的部分）
 prefixes = cell(length(fileList), 1);
@@ -41,7 +42,9 @@ for i = 1:length(uniquePrefixes)
     end
     
     % 保存结果为以前缀命名的新 txt 文件
+
     outputPath = fullfile(folderPath, [prefix, '.txt']);
+
     writematrix(A, outputPath);
 
     for j = 1:length(matchedFiles)

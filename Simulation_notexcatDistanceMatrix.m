@@ -2,24 +2,23 @@
 % the IASPP with given adjacency matrix.
 % The demand is purely random demand
 clear,clc
-Nvec = [10,20,50,100];
-Nvec = [30,40,60,70,80,90];
+Nvec = [10,20,40,60,80,100];
+Nvec = [100]
 simutimes = 1000;
-
 
 for N = Nvec
     N
-    result = zeros(simutimes,12);
+    result = zeros(simutimes,14);
     for i = 1:simutimes
-        [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
-        result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
+        [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_LP,t_LP3,t_dbs_vec]=simu_on_tree_network(N);
+        result(i,:) = [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_LP,t_LP3,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandomtest.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
     writematrix(result,filename)
 end
 
 
-function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N)
+function [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_LP,t_LP3,t_dbs_vec]=simu_on_tree_network(N)
     %for a tree network
     %_______________________________________________________________________
     % generate a tree network with uniformly random distributed link weight
@@ -37,6 +36,17 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     % G2 = graph(A_LP);
     u  = ones(1,N);
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
+    
+    
+    tic
+    [A_LP3,D_target3]=hung_ISPP(A_input,D_demand);
+    t_LP3 = toc;
+    disp(t_LP3)
+    % G2 = graph(A_LP);
+    u  = ones(1,N);
+    distances_deviation3 = u*abs(D_target3-D_demand)*u.'/sum(sum(D_demand));
+    
+    
     linknum = numedges(T);
     base_num_vec =  round(linspace(2, linknum, 5));
         distances_deviation2_vec = zeros(1,5);

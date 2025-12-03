@@ -6,14 +6,21 @@ clear,clc
 % LPvsQiu_N%dPerturbation1havetime
 % LPvsQiu_N%dExactsolutonhavetime
 
-N_vec = [10,20,50,100];
-data_mean = zeros(length(N_vec),6);
-data_std = zeros(length(N_vec),6);
+N_vec = [10,20,40,60];
+data_mean = zeros(length(N_vec),7);
+data_std = zeros(length(N_vec),7);
 count = 1;
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
     results = readmatrix(filename);
     results = results(:,7:12);
+    
+    filename_supp = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom_supphung.txt",N);
+    result_supp = readmatrix(filename_supp);
+
+    results = [results,result_supp(:,2)];
+
+
     mean_values = mean(results);
     std_values = std(results);
     data_mean(count,:) = mean_values;
@@ -22,10 +29,10 @@ for N = N_vec
 end
 
 fig = figure; hold on;
-colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
+colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382",'#C8B8A6'];
 
 x = 1:4;
-for i = 1:6
+for i = 1:7
     if i==1
         errorbar(x, data_mean(:,i), data_std(:,i), 's-', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 12);
     else

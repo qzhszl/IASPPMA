@@ -21,7 +21,7 @@ function [A_output,D_output]=hung_ISPP(A,D)
     end
     
     iteration_times = 1;
-    while iteration_times<1000
+    while iteration_times<30
         [sum_infeasibility,infeasibility,~,G_T] = solve_infeasibility_minimization(P,target_D,m,G_T,D);
         innneridx = 1;
         for i = 1:n
@@ -58,10 +58,10 @@ function [A_output,D_output]=hung_ISPP(A,D)
         ub = [];
       
         % 求解 LP
-        options = optimoptions('linprog','Display','iter'); % 或 'none'
+        options = optimoptions('linprog','Display','none'); % 或 'none'
         [w_opt, ~, ~, ~] = linprog(f, A, B, Aeq, Beq, lb, ub, options);
         
-        G_T.Edges.Weight = w;
+        G_T.Edges.Weight = w_opt;
         A_output = full(G_T.adjacency("weighted"));
         D_output = distances(G_T);
         % sum_infeasibility =  sum(sum(abs(D_output-D)));

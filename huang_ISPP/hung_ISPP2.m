@@ -11,11 +11,11 @@ G_T = graph(A);
 plot(G_T,'EdgeLabel',G_T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
 
-D = [0     9    10    11    19
+D = [0     9    10    11    21
      9     0    19     2    10
     10    19     0    21    29
     11     2    21     0    12
-    19    10    29    12     0];
+    21    10    29    12     0];
 
 % Initialization
 
@@ -38,7 +38,7 @@ for i = 1:n
 end
 
 iteration_times = 1;
-while iteration_times<1000
+while iteration_times<100
     [sum_infeasibility,infeasibility,w,G_T] = solve_infeasibility_minimization(P,target_D,m,G_T,D);
 
     innneridx = 1;
@@ -79,7 +79,7 @@ while iteration_times<1000
     options = optimoptions('linprog','Display','iter'); % 或 'none'
     [w_opt, ~, ~, ~] = linprog(f, A, B, Aeq, Beq, lb, ub, options);
     
-    G_T.Edges.Weight = w;
+    G_T.Edges.Weight = w_opt;
     % A_output = full(G_T.adjacency("weighted"));
     D_output = distances(G_T);
     sum_infeasibility =  sum(sum(abs(D_output-D)));
