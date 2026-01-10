@@ -3,7 +3,7 @@
 % The demand is purely random demand
 clear,clc
 Nvec = [10,20,40,60,80,100];
-Nvec = [100]
+Nvec = [120]
 simutimes = 1000;
 
 for N = Nvec
@@ -13,7 +13,8 @@ for N = Nvec
         [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_LP,t_LP3,t_dbs_vec]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_LP,t_LP3,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
     writematrix(result,filename)
 end
 
@@ -39,7 +40,8 @@ function [distances_deviation1,distances_deviation3,distances_deviation2_vec,t_L
     
     
     tic
-    [A_LP3,D_target3]=hung_ISPP(A_input,D_demand);
+%     [A_LP3,D_target3]=hung_ISPP(A_input,D_demand);
+    D_target3 = D_demand;
     t_LP3 = toc;
     disp(t_LP3)
     % G2 = graph(A_LP);

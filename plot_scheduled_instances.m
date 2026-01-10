@@ -7,11 +7,11 @@ clear,clc
 
 
 N_vec = [10,20,50,100];
-N_vec = [100];
+N_vec = [200];
 data_shecduled_instace = zeros(length(N_vec),6);
 colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 % time_window = [0.001, 0.001937, 0.003753, 0.007272, 0.014092, 0.027308, 0.052912, 0.10247, 0.19837, 0.38404, 0.74346, 1.4384, 2.7826, 5.3849, 10.418, 20.173, 30];
-time_window = logspace(log10(0.35), log10(30), 18)
+time_window = logspace(log10(0.35), log10(120), 18)
 % time_window = [0.1000    0.1430    0.2044    0.2922    0.4176    0.5967    0.8529    1.2197    1.7432    2.4914    3.5585    5.0817    7.2570   10.3595   30.0000];
 
 % time_window = [0.001, 2, 4, 6, 9, 11, 13, 15, 17, 19, 21, 24, 26, 28, 30]
@@ -22,7 +22,9 @@ for N = N_vec
     count = 1;
     data_shecduled_instace = zeros(length(time_window),6);
     for time_shreshold = time_window
-        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);
+%         filename =
+%         sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dhavetime.txt",N);   % test for N=100
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
         result = readmatrix(filename);
         results = result(:,7:12);
         data_shecduled_instace(count,:) = sum(results<=time_shreshold,1); 
@@ -60,8 +62,8 @@ for N = N_vec
     % end
 
 
-    if N == 100
-        lgd = legend({'LPLW', '$b_n = 2$'}, 'interpreter','latex','Location', 'northeast',FontSize=24);
+    if N == 200
+        lgd = legend({'LPLW', '$m = 2$'}, 'interpreter','latex','Location', 'northeast',FontSize=24);
         set(legend, 'Position', [0.6, 0.5, 0.2, 0.08]);
     end
 
@@ -76,6 +78,6 @@ for N = N_vec
     box on
     hold off
     
-    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\NotExactsolutionLPvsQiuScheduledcasebn2only_N%d.pdf",N);
+    picname = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\Random_instance_LPvsQiuScheduledcasebn2only_N%d.pdf",N);
     exportgraphics(fig, picname,'BackgroundColor', 'none','Resolution', 600);
 end

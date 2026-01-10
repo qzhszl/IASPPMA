@@ -1,7 +1,7 @@
 clear,clc
 %LPvsQiu_N%dPerturbation1havetime
 % Perturbation1 means the perturbation is randomly from [0,1]
-N_vec = [10,20,50,100,120,140,160,180,200];
+N_vec = [10,20,40,60,80,100,120,140,160,180,200];
 
 
 data_mean = zeros(length(N_vec),6);
@@ -30,6 +30,46 @@ for i = 1:6
     end
 end
 
+
+
+
+%output_data
+output_matrix = [N_vec.', ...
+                 data_mean(:,1), data_std(:,1), ...
+                 data_mean(:,1), data_std(:,1), ...
+                 data_mean(:,2), data_std(:,2), ...
+                 data_mean(:,3), data_std(:,3), ...
+                 data_mean(:,4), data_std(:,4), ...
+                 data_mean(:,5), data_std(:,5), ...
+                 data_mean(:,6), data_std(:,6), ...
+                 ];   % 如果第7条是重复第一条
+
+writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\output_matrix.csv');
+
+
+% filename = 'Perturbation.txt';
+% 
+% colnames = {'N', ...
+%             'LPLW','std_LPLW', ...
+%             'Hung','std_Hung', ...
+%             'm2','std_m2', ...
+%             'm25L','std_m25L', ...
+%             'm50L','std_m50L', ...
+%             'm75L','std_m75L', ...
+%             'mL','std_mL'};
+% 
+% 
+% % 1️⃣ 写入列名（第一行）
+% writecell(colnames, filename, 'Delimiter', ',');
+% 
+% % 2️⃣ 追加数据
+% writematrix(output_matrix, filename, 'Delimiter', ',', 'WriteMode', 'append');
+% 
+% disp('写入完成！')
+
+
+
+
 % 图像美化
 ax = gca;  % Get current axis
 ax.FontSize = 20;  % Set font size for tick label
@@ -48,7 +88,7 @@ ylabel('$\|D-S\|$','interpreter','latex',FontSize=24)
 lgd = legend({'LPLW', 'Hung', '$m = 2$', '$m = 0.25L$', '$m = 0.50L$', '$m = 0.75L$', '$m = L$'}, 'interpreter','latex','Location', 'northeast',FontSize=20);
 lgd.NumColumns = 2;
 lgd.ItemTokenSize = [30 500];
-lgd.IconColumnWidth = lgd.FontSize;
+% lgd.IconColumnWidth = lgd.FontSize;
 set(legend, 'Position', [0.485, 0.71, 0.2, 0.1]);
 box on
 hold off

@@ -9,24 +9,54 @@ data_mean = zeros(length(N_vec),6);
 data_std = zeros(length(N_vec),6);
 count = 1;
 
+
+figure
+hold on
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
-    
-    if N ==20
-        results = readmatrix(filename);
+    % final plot figure: change N>10000: else for test
+    if N>90
+        filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+    else
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+    end
+    results = readmatrix(filename);
+    if size(results,2)==14  
         results = results(:,[1,3:7]);
     else
-
-        results = readmatrix(filename);
         results = results(:,1:6);
     end
- 
+    check_results = results(:,3:5);
+    
+    
+    if N>100 
+        histogram(results(:,1), ...
+            'Normalization','probability', ...
+            'DisplayStyle','stairs', ...
+            'LineWidth',1.5)
+    end
+    
+
     mean_values = mean(results);
-    std_values = std(results);
+    std_values = std(results)
     data_mean(count,:) = mean_values;
     data_std(count,:) = std_values;
     count = count+1;
 end
+hold off
+legend
+
+% for N = [100,120,140,160,180,200,201]
+%     N
+%     filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+%     results_test = readmatrix(filename);
+%     results_test = results_test(:,1:6);
+%     mean_values = mean(results_test)
+%     std_values = std(results_test)
+% end
+
+
+
+
 
 output_matrix = [N_vec.', ...
                  data_mean(:,1), data_std(:,1), ...
@@ -38,13 +68,12 @@ output_matrix = [N_vec.', ...
                  data_mean(:,6), data_std(:,6), ...
                  ];   % 如果第7条是重复第一条
 
-writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\norm_matrix_random_demand.csv');
+% writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\norm_matrix_random_demand.csv');
 
 
 
 fig = figure; hold on;
 colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
-x = 1:5;
 for i = 1:6
     if i==1
         errorbar(N_vec, data_mean(:,i), data_std(:,i), 's-', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 15,'CapSize',12);

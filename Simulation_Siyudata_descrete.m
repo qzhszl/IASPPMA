@@ -12,22 +12,27 @@
 % The percentage of the three categories so that in one scenario, you have e.g., more than 50\% of the traffic with very stringent latency bound, etc. 
 
 clear,clc
-Nvec = [20,40,60,80];
+Nvec = [40,60,80,100];
 for N = Nvec
-    run_simu_onsitydata_descrete(N,0.25,0.25,0.50)
+    run_simu_onsitydata_descrete(N,0.5,0.25,0.25)
+    run_simu_onsitydata_descrete(N,0.25,0.5,0.25)
+    run_simu_onsitydata_descrete(N,0.25,0.25,0.5)
+    run_simu_onsitydata_descrete(N,0.34,0.33,0.33)
 end
 
 
 function run_simu_onsitydata_descrete(N, dsmall,dmid,dlarge)
-% the sum of the percentage of three types of delay should be 1
-simutimes = 1000;
-result = zeros(simutimes,13);
-for i = 1:simutimes
-    [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N, dsmall,dmid,dlarge);
-    result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter];
-end
-filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
-writematrix(result,filename)
+    % the sum of the percentage of three types of delay should be 1
+    simutimes = 1000;
+    result = zeros(simutimes,13);
+    for i = 1:simutimes
+        [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N, dsmall,dmid,dlarge);
+        result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter];
+    end
+%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\SiyuData\\discrete\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+    filename = sprintf("D:\\data\\ISPP_givenA\\test\\descretedemandLPvsQiu_N%ddataper%.2f%.2f%.2f_siyuinput_treefromERp05.txt",N,dsmall,dmid,dlarge);
+    
+    writematrix(result,filename)
 end
 
 function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec,tree_diameter]=simu_on_tree_network(N, dsmall,dmid,dlarge)

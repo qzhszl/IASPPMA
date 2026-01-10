@@ -24,6 +24,9 @@ for N = Nvec
 end
 
 
+
+
+
 function [distances_deviation1,t_LP,tree_diameter]=simu_on_tree_network(N)
     %for a tree network
     %_______________________________________________________________________

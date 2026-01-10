@@ -1,6 +1,7 @@
 % 目标文件夹路径
 % folderPath = 'D:\data\ISPP_givenA\complete_random_demand\PerturbatedDemand\';
-folderPath = 'D:\data\ISPP_givenA\complete_random_demand\RandomDemand\';
+% folderPath = 'D:\data\ISPP_givenA\complete_random_demand\RandomDemand\';
+folderPath = 'D:\data\ISPP_givenA\complete_random_demand\SiyuData\discrete\';
 
 
 % 步骤 1: 使用 dir 接受的通配符 (*) 获取一个粗略的文件列表

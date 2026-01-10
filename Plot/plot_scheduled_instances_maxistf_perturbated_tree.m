@@ -7,26 +7,27 @@ clear,clc
 
 
 N_vec = [10,20,50,100,200];
-N_vec = [200];
+N_vec = [202];
 data_shecduled_instace = zeros(length(N_vec),6);
 colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 % time_window = [0.001, 0.001937, 0.003753, 0.007272, 0.014092, 0.027308, 0.052912, 0.10247, 0.19837, 0.38404, 0.74346, 1.4384, 2.7826, 5.3849, 10.418, 20.173, 30];
 % time_window = logspace(log10(100), log10(60000), 25)
-time_window = linspace(100, 40000, 25)
+time_window = linspace(0, 240, 30);
 
 
 for N = N_vec
     count = 1;
     data_shecduled_instace = zeros(length(time_window),6);
-%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
+%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
     
     result = readmatrix(filename);
     results = result(:,7:12);
-    cumulative_time = cumsum(results, 1);
-    max(cumulative_time)
+    maxtime = max(results)
+    mintime = min(results)
+    ave_time = mean(results)
     for time_shreshold = time_window
-        data_shecduled_instace(count,:) = sum(cumulative_time<=time_shreshold,1); 
+        data_shecduled_instace(count,:) = sum(results<=time_shreshold,1); 
         count = count+1;
     end
     % filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\scheduledinstances_N%d.txt",N);
@@ -36,20 +37,20 @@ for N = N_vec
     
     for i = 1:2
         if i==1
-            plot(time_window, data_shecduled_instace(:,i)./size(cumulative_time,1), 's-', 'Color', colors(i), 'LineWidth', 3.5, 'MarkerSize', 10);
+            plot(time_window, data_shecduled_instace(:,i)./size(results,1), 's-', 'Color', colors(i), 'LineWidth', 3.5, 'MarkerSize', 10);
         else
-            plot(time_window, data_shecduled_instace(:,i)./size(cumulative_time,1), 'o--', 'Color', colors(i), 'LineWidth', 3.5, 'MarkerSize', 10);
+            plot(time_window, data_shecduled_instace(:,i)./size(results,1), 'o--', 'Color', colors(i), 'LineWidth', 3.5, 'MarkerSize', 10);
         end
     end
     
     
 
 
-    output_matrix = [time_window.', data_shecduled_instace(:,1)./size(cumulative_time,1),data_shecduled_instace(:,2)./size(cumulative_time,1)
+    output_matrix = [time_window.', data_shecduled_instace(:,1)./size(results,1),data_shecduled_instace(:,2)./size(results,1)
                  ];   % 如果第7条是重复第一条
 
-%     writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\scheduled_instance_matrix_perturbedtree.csv');
-    writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\scheduled_instance_matrix_random.csv');
+    writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\scheduled_instance_maxistf_matrix_perturbedtree.csv');
+%     writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\scheduled_instance_maxistf_matrix_random.csv');
 
 
 
@@ -88,9 +89,9 @@ for N = N_vec
 
     box on
     hold off
-    set(fig, 'Color', 'none');
+%     set(fig, 'Color', 'none');
     ax = gca;
-    set(ax, 'Color', 'none');
+%     set(ax, 'Color', 'none');
     annotation('textbox', [0.58, 0.35, 0.1, 0.05], 'String', '$N = 200$', ...
     'EdgeColor', 'none', 'FontSize', 32, Interpreter='latex');
 

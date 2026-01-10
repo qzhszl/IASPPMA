@@ -2,7 +2,7 @@
 % the IASPP with given adjacency matrix.
 clear,clc
 % Nvec = [10,20,50,100];
-Nvec = [40,70,90];
+Nvec = [10,40];
 simutimes = 1000;
 
 for N = Nvec
@@ -12,7 +12,8 @@ for N = Nvec
         [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_tree_network(N);
         result(i,:) = [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec];
     end
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
+    filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dPerturbation1havetime.txt",N);
+%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
     writematrix(result,filename)
 end
 
@@ -36,7 +37,9 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
     u  = ones(1,N);
     distances_deviation1 = u*abs(D_target-D_demand)*u.'/sum(sum(D_demand));
     linknum = numedges(T);
-    base_num_vec =  round(linspace(2, linknum, 5));
+    base_num_vec =  round(linspace(2, linknum, 5));  % for different number of basement
+%     base_num_vec =  [2];        % for  m=2
+
     % distances_deviation2_vec = zeros(1,length(base_num_vec));
 
     distances_deviation2_vec = zeros(1,5);
@@ -52,15 +55,7 @@ function [distances_deviation1,distances_deviation2_vec,t_LP,t_dbs_vec]=simu_on_
         distances_deviation2_vec(count) = distances_deviation2;
         count = count+1;
     end
-    % subplot(2,2,1)
-    % plot(T,'EdgeLabel',T.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-    % 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
-    % subplot(2,2,2)
-    % plot(G2,'EdgeLabel',G2.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-    % 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
-    % subplot(2,2,3)
-    % plot(Goutput,'EdgeLabel',Goutput.Edges.Weight,'NodeColor',[0.8500 0.3250 0.0980], ...
-    % 'EdgeAlpha',0.5,'LineWidth',1,'MarkerSize',7,'EdgeLabelColor',[0 0.4470 0.7410],'NodeFontSize',10);
+    
 end
 
 

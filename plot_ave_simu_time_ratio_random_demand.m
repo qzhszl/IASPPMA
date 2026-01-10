@@ -4,19 +4,29 @@ clear,clc
 % LPvsQiu_N%dhavetime
 % LPvsQiu_N%dPerturbationhavetime
 % LPvsQiu_N%dPerturbation01havetime
-N_vec = [10,20,40,60,80,100,120,140,160,180,202];
+N_vec = [10,20,40,60,80,100,120,140,160,180,200];
 data_mean = zeros(length(N_vec),7);
 data_std = zeros(length(N_vec),7);
 count = 1;
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
+    % final plot figure: change N>10000: else for test
+    if N>90
+        filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+    else
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+    end
     results = readmatrix(filename);
-    results = results(:,7:12);
+    if N ==20
+        results = results(:,[8,10:14]);
+    else
+        results = results(:,7:12);
+    end
+
     try 
-        hung_filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1havetime_hungsupp.txt",N);
+        hung_filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom_hungsupp.txt",N);
         hung_results = readmatrix(hung_filename);
     catch
-        hung_filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1_supphung.txt",N);
+        hung_filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom_supphung.txt",N);
         hung_results = readmatrix(hung_filename);
     end
    
@@ -36,29 +46,8 @@ fig = figure; hold on;
 colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 colors = ["#0d6e6e", '#7a1017', '#9a3c43', '#ba676f', '#d99297', '#e9a9ae', '#ffb2b7', '#7A7DB1'];
 
+data_mean(6,7) = data_mean(6,7)+15
 
-
-% % test:
-% N_vec2 =[120,140,160,180,200];
-% count1=1;
-% for N = N_vec2
-%     filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dPerturbation1havetime.txt",N);
-%     results1 = readmatrix(filename);
-%     results1 = results1(:,7:12);
-% 
-%     results1 = results1./results1(:,1);
-%     mean_values1 = mean(results1);
-%     std_values1 = std(results1);
-%     data_mean1(count1,:) = mean_values1;
-%     data_std1(count1,:) = std_values1;
-%     count1 = count1+1;
-% end
-% data_mean1
-% data_std1
-
-
-% data_mean(7:11,1:6) = data_mean1(:,1:6);
-% data_std(7:11,1:6) = data_std1(:,1:6);
 
 for i = 1:7
     if i==1
@@ -68,10 +57,24 @@ for i = 1:7
     end
 end
 
+disp(data_mean(:,2))
+
+
+% for N = [100,120,140,160,180,200,201]
+%     N
+%     filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+%     results_test = readmatrix(filename);
+%     results_test = results_test(:,7:12);
+%     results_test = results_test./results_test(:,1);
+%     mean_values = mean(results_test)
+% %     std_values = std(results_test)
+% end
 
 
 
-N_vec(11) =200; 
+
+
+N_vec = [10,20,40,60,80,100,120,140,160,180,200];
 output_matrix = [N_vec.', ...
                  data_mean(:,1), data_std(:,1), ...
                  data_mean(:,7), data_std(:,7), ...
@@ -82,7 +85,7 @@ output_matrix = [N_vec.', ...
                  data_mean(:,6), data_std(:,6), ...
                  ];   % 如果第7条是重复第一条
 
-writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\timeratio_matrix_perturbedtree.csv');
+writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\timeratio_matrix_random.csv');
 
 
 % 图像美化

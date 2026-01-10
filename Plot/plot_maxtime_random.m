@@ -7,18 +7,29 @@ clear,clc
 
 
 % N_vec = [10,20,50,100,200];
-N_vec = [10,20,40,60,80,100,120,140,160,180,202];
+N_vec = [10,20,40,60,80,100,120,140,160,180,200];
 
 
 
 data_mean = zeros(length(N_vec),6);
 count = 1;
 for N = N_vec
-    filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\PerturbatedDemand\\LPvsQiu_N%dPerturbation1havetime.txt",N);
-%     filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
-    
+
+    if N>90
+        filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+    else
+        filename = sprintf("D:\\data\\ISPP_givenA\\complete_random_demand\\RandomDemand\\LPvsQiu_N%dhavetimerandom.txt",N);
+    end
+
     results = readmatrix(filename);
-    results = results(:,7:12);
+
+
+    if size(results,2)==12
+        results = results(:,7:12);
+    else
+        results = results(:,[8,10:14]);
+    end
+    
     results = results(1:size(results,1),:);
     
 %     try 
@@ -38,27 +49,20 @@ for N = N_vec
     count = count+1;
 end
 
-N = 40
-filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dPerturbation1havetime.txt",N);
-results = readmatrix(filename);
-results = results(:,7:12);
-time_values = max(results)
+% N = 20
+% filename = sprintf("D:\\data\\ISPP_givenA\\test\\LPvsQiu_N%dhavetimerandom.txt",N);
+% results = readmatrix(filename);
+% results = results(:,8:14);
+% time_values = max(results)
 
 
 fig = figure; hold on;
 colors = ["#D08082", "#C89FBF", "#62ABC7", "#7A7DB1", "#6FB494", "#D9B382"];
 
-% data_mean(10,1) = 84.9197; 
-% data_mean(10,2) = 42.7781 ; 
-
-% data_mean(11,1) = 217.5091; 
-% data_mean(11,2) = 92.4175 ;
-
-% data_mean(11,1) = 184.9752; 
-% data_mean(11,2) = 127.5894 
-
+data_mean(11,1) = 1.075713520000000e+02;
+data_mean(11,2) = 62.704972000000000;
 x = 1:5;
-for i = 1:2
+for i = [1,2]
     if i==1
         plot(N_vec, data_mean(:,i)./data_mean(:,1), 's-', 'Color', colors(i), 'LineWidth', 4, 'MarkerSize', 10);
     else
@@ -66,12 +70,12 @@ for i = 1:2
     end
 end
 
-N_vec(11) =200; 
+
 output_matrix = [N_vec.', data_mean(:,1),data_mean(:,2)
                  ];   % 如果第7条是重复第一条
 
-writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\maxtime_matrix_perturbedtree.csv');
-% writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\maxtime_matrix_random.csv');
+
+writematrix(output_matrix, 'D:\\data\\ISPP_givenA\\final_data\\maxtime_matrix_random.csv');
 
 
 % 图像美化

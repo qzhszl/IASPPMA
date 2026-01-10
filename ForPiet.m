@@ -82,7 +82,7 @@ distances(G_P_f) - D
 A_P_filter(A_P_filter ~= 0) = 1 ./ A_P_filter(A_P_filter ~= 0);
 Omega2 = EffectiveResistance(A_P_filter);
 Omega2 - D
-
+a = inv(Omega2)
 
 function T = generate_a_tree(N,minlinkweight,maxlinkweight)
 % 生成完全连接的随机加权图
